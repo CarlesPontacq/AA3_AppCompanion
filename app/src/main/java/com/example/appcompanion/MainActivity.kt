@@ -7,20 +7,49 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var splashScreenLayout: LinearLayout
+
+    private lateinit var bottomNavigationView: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        splashScreenLayout = findViewById(R.id.splashLayout)
-        splashScreenLayout.setOnClickListener{onButtonClick()}
+        bottomNavigationView = findViewById(R.id.navbar)
+
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            handleNavigationItemSelected(item.itemId)
+        }
+
+        loadFragment(CardsFragment())
     }
 
-    private fun onButtonClick(){
-        val intent = Intent(this, LoginActivity::class.java);
-        startActivity(intent)
+    private fun loadFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction().replace(R.id.frame, fragment).commit()
+    }
+
+    private fun handleNavigationItemSelected(itemId: Int): Boolean {
+        return when (itemId) {
+            R.id.cards -> {
+                loadFragment(CardsFragment())
+                true
+            }
+            R.id.deck -> {
+                loadFragment(DeckFragment())
+                true
+            }
+            R.id.chat -> {
+                loadFragment(ChatFragment())
+                true
+            }
+            R.id.profile -> {
+                loadFragment(ProfileFragment())
+                true
+            }
+            else -> false
+        }
     }
 }
