@@ -22,6 +22,8 @@
         android:layout_height="match_parent"
         android:layout_weight="0.9"
         android:background="#505050"
+        app:itemIconTint="@color/white"
+        app:itemTextColor="@color/white"
         app:menu="@menu/custom_navbar" />
 
 </LinearLayout>
