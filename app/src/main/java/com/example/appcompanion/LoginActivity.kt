@@ -4,6 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager.OnActivityResultListener
 import android.util.Log
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -13,13 +16,23 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var googleSignInClient: GoogleSignInClient
 
+    private lateinit var emailField: EditText
+    private lateinit var passwordField: EditText
+    private lateinit var auth: FirebaseAuth
+
+    private lateinit var loginButton: Button
+    private lateinit var registerButton: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        //******* Start Google Auth
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken("743427009820-9s0bc4joig8h05pt9f0qlev5g7tveu1c.apps.googleusercontent.com")
@@ -38,6 +51,20 @@ class LoginActivity : AppCompatActivity() {
         }
 
         findViewById<SignInButton>(R.id.btn_login_google).setOnClickListener{signIn()}
+        //******* End Google Auth
+
+        //******* Start User Auth
+        emailField = findViewById(R.id.input_user)
+        passwordField = findViewById(R.id.input_password)
+
+        auth = FirebaseAuth.getInstance()
+
+        findViewById<Button>(R.id.btn_register).setOnClickListener{Register()}
+        findViewById<Button>(R.id.btn_login).setOnClickListener{Login()}
+        //******* End User Auth
+
+
+
     }
 
     private fun signIn(){
@@ -57,6 +84,36 @@ class LoginActivity : AppCompatActivity() {
             }
             else{
                 Log.d("Login Google", "Error " + task.exception)
+            }
+        }
+    }
+
+    private fun Register(){
+        val email = emailField.text.toString()
+        val password = passwordField.text.toString()
+
+        auth.createUserWithEmailAndPassword(email, password).
+        addOnCompleteListener(this){ task ->
+            if(task.isSuccessful){
+                Toast.makeText(this, "Registro correcto", Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(this, "Error en el registro: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+
+            }
+        }
+    }
+
+    private fun Login(){
+        val email = emailField.text.toString()
+        val password = passwordField.text.toString()
+
+        auth.signInWithEmailAndPassword(email, password).
+        addOnCompleteListener(this){ task ->
+            if(task.isSuccessful){
+                Toast.makeText(this, "Login correcto", Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(this, "Error en el login: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+
             }
         }
     }
