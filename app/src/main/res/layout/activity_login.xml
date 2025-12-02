@@ -53,14 +53,17 @@
         android:layout_gravity="center"
         android:textAlignment="center"
         android:textSize="24dp"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black"
+        android:paddingVertical="10dp"
+        />
 
     <EditText
         android:id="@+id/input_user"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:paddingBottom="20dp"/>
 
     <EditText
         android:id="@+id/input_password"
@@ -68,12 +71,13 @@
         android:layout_height="wrap_content"
         android:layout_weight="10"
         android:ems="10"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:paddingBottom="20dp"/>
 
     <Button
         android:id="@+id/btn_login"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:text="Login"
         android:layout_margin="10dp"
         android:backgroundTint="@color/black"/>
@@ -81,7 +85,7 @@
     <Button
         android:id="@+id/btn_register"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:text="Registrarse"
         android:backgroundTint="@color/gray"/>
@@ -90,7 +94,8 @@
         android:id="@+id/btn_login_google"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:paddingVertical="20dp"/>
 </LinearLayout>
 
 </LinearLayout>
