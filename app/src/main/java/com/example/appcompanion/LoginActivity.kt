@@ -44,6 +44,7 @@ class LoginActivity : AppCompatActivity() {
 
             LoginManager.loginFirebaseEmail(email, password, {
                 Toast.makeText(this, "Login correcto", Toast.LENGTH_SHORT).show()
+                goToNextActivity()
             }, {
                 error -> Toast.makeText(this, "Error: $error", Toast.LENGTH_SHORT).show()
             })
@@ -54,11 +55,14 @@ class LoginActivity : AppCompatActivity() {
             val email = emailField.text.toString()
             val password = passwordField.text.toString()
 
+            LoginManager.loginType = 2
+
             LoginManager.registerFirebaseEmail(
                 email,
                 password,
                 onSuccess = {
                     Toast.makeText(this, "Registro correcto", Toast.LENGTH_SHORT).show()
+                    goToNextActivity()
                 },
                 onError = { error ->
                     Toast.makeText(this, "Error: $error", Toast.LENGTH_SHORT).show()
@@ -75,10 +79,16 @@ class LoginActivity : AppCompatActivity() {
             data,
             onSuccess = {
                 Toast.makeText(this, "Login Google exitoso", Toast.LENGTH_SHORT).show()
+                goToNextActivity()
             },
             onError = {
                 Toast.makeText(this, "Error: $it", Toast.LENGTH_SHORT).show()
             }
         )
+    }
+
+    fun goToNextActivity(){
+        val intent = Intent(this, CardListDisplayActivity::class.java);
+        startActivity(intent)
     }
 }

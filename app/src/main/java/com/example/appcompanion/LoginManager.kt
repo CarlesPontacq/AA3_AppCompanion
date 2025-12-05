@@ -30,7 +30,8 @@ object LoginManager {
     fun startSession(activity: Activity){
         when(loginType){
             0 -> loginGoogle(activity)
-            1 -> Log.d("LoginManager", "Listo para Firebase Email/Password")
+            1 -> Log.d("LoginManager", "Intentando hacer Login de Firebase")
+            2 -> Log.d("LoginManager", "Intentando hacer Register de Firebase")
             else -> Log.e("LoginManager", "Tipo de login inválido")
         }
     }
