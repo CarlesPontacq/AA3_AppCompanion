@@ -33,6 +33,9 @@ class LoginActivity : AppCompatActivity() {
             LoginManager.startSession(this)
         }
 
+        emailField = findViewById(R.id.input_user)
+        passwordField = findViewById(R.id.input_password)
+
         findViewById<Button>(R.id.btn_login).setOnClickListener {
             val email = emailField.text.toString()
             val password = passwordField.text.toString()
@@ -44,6 +47,23 @@ class LoginActivity : AppCompatActivity() {
             }, {
                 error -> Toast.makeText(this, "Error: $error", Toast.LENGTH_SHORT).show()
             })
+
+        }
+
+        findViewById<Button>(R.id.btn_register).setOnClickListener {
+            val email = emailField.text.toString()
+            val password = passwordField.text.toString()
+
+            LoginManager.registerFirebaseEmail(
+                email,
+                password,
+                onSuccess = {
+                    Toast.makeText(this, "Registro correcto", Toast.LENGTH_SHORT).show()
+                },
+                onError = { error ->
+                    Toast.makeText(this, "Error: $error", Toast.LENGTH_SHORT).show()
+                }
+            )
         }
     }
 

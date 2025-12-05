@@ -64,8 +64,21 @@ object LoginManager {
         }
     }
 
-    fun loginFirebaseEmail(email: String, password: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
+    fun loginFirebaseEmail(email: String, password: String,
+                           onSuccess: () -> Unit,
+                           onError: (String) -> Unit) {
         auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) onSuccess()
+                else onError(task.exception?.message ?: "Error desconocido")
+            }
+    }
+
+    fun registerFirebaseEmail(email: String, password: String,
+                              onSuccess: () -> Unit,
+                              onError: (String) -> Unit
+    ) {
+        auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) onSuccess()
                 else onError(task.exception?.message ?: "Error desconocido")
