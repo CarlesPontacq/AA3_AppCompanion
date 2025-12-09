@@ -8,18 +8,28 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.85"
+        android:background="@color/reddishBackground"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        android:titleTextColor="@color/white"/>
+    />
+
     <FrameLayout
         android:id="@+id/frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.1">
-    </FrameLayout>
+        android:layout_weight="0.15"></FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.9"
+        android:layout_weight="0.85"
         android:background="#505050"
         app:itemIconTint="@color/white"
         app:itemTextColor="@color/white"
