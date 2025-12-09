@@ -88,7 +88,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun goToNextActivity(){
-        val intent = Intent(this, CardListDisplayActivity::class.java);
+        val intent = Intent(this, MainActivity::class.java);
         startActivity(intent)
     }
 }
