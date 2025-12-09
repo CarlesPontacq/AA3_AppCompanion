@@ -1,6 +1,5 @@
 package com.example.appcompanion
 
-import PokemonTCGApi.PokemonApiCall
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -17,28 +16,7 @@ class CardsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val timestamp = System.currentTimeMillis().toString()
-        val hash = md5("$timestamp$privateKey")
 
-        val call = PokemonApiCall.apiService.getCards(privateKey, timestamp, hash)
-
-        /*
-        call.enqueue(object : Callback<MarvelResponse> {
-            override fun onResponse(call: Call<MarvelResponse>, response: Response<MarvelResponse>) {
-                if (response.isSuccessful) {
-                    val characters = response.body()?.data?.results
-                    characters?.forEach { character ->
-                        Log.d("Character", "Name: ${character.name}, Description: ${character.descrption}")
-                    }
-                }else {
-                    Log.e("ApiError", "Response not successful: ${response.code()} - ${response.message()}")
-                }
-            }
-            override fun onFailure(call: Call<MarvelResponse>, t: Throwable) {
-                Log.e("ApiError", t.message ?: "Unknown error")
-            }
-        })
-         */
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_cards, container, false)

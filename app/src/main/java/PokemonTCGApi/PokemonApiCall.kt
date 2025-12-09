@@ -1,4 +1,4 @@
-package PokemonTCGApi
+package PokemonApi
 
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit
 
 object PokemonApiCall {
 
-    private const val BASE_URL = "https://api.pokemontcg.io/" //<-- Enlace completo: "https://api.pokemontcg.io/v2/cards"
+    private const val BASE_URL = "https://api.pokemontcg.io/v2/"
 
     private val httpClient = OkHttpClient.Builder()
         .connectTimeout(10, TimeUnit.MINUTES)
@@ -23,5 +23,4 @@ object PokemonApiCall {
             .build()
             .create(PokemonApiInstance::class.java)
     }
-
 }

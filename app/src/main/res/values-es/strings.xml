@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AppCompanion</string>
+    <string name="app_name">PokeSync</string>
     <string name="cards_navigation">Cartas</string>
     <string name="deck_navigation">Mazo</string>
     <string name="chat_navigation">Chat</string>
