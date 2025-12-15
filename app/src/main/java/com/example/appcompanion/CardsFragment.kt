@@ -27,14 +27,46 @@ class CardsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        apiConnection();
+        //apiConnection();
+        getRandomCards()
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_cards, container, false)
     }
 
+    private fun getRandomCards(){
+        val randomPage = (1..100).random()
+
+        val call = PokemonApiCall.apiService.searchCards(
+            query = null,
+            page = randomPage,
+            pageSize = 20
+        )
+
+        call.enqueue(object : Callback<PokemonCardResponse> {
+
+            override fun onResponse(
+                call: Call<PokemonCardResponse>,
+                response: Response<PokemonCardResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val cards = response.body()?.data ?: emptyList()
+                    cards.forEach{ card ->
+                        Log.d(
+                            "PokemonCard", "Name: ${card.name}, Types: ${card.types}"
+                        )
+                        // Aquí actualizas el RecyclerView
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<PokemonCardResponse>, t: Throwable) {
+                Log.e("PokemonCard", "Error: ${t.message}")
+            }
+        })
+    }
     private fun apiConnection(){
-        val call = PokemonApiCall.apiService.searchCards("name:pikachu")
+        val call = PokemonApiCall.apiService.searchCards("name: pickachu")
 
         call.enqueue(object : Callback<PokemonCardResponse>{
             override fun onResponse(
