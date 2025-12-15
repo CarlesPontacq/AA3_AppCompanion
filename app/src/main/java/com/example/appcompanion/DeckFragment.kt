@@ -18,6 +18,6 @@ class DeckFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as? AppCompatActivity)?.supportActionBar?.title = "Deck"
+        (activity as? AppCompatActivity)?.supportActionBar?.title = getString(R.string.deck_navigation)
     }
 }

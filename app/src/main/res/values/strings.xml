@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AppCompanion</string>
+    <string name="app_name" translatable="false">PokeSync</string>
     <string name="cards_navigation">Cards</string>
     <string name="deck_navigation">Deck</string>
     <string name="chat_navigation">Chat</string>

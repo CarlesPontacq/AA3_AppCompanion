@@ -6,12 +6,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import java.math.BigInteger
 import java.security.MessageDigest
 
 class CardsFragment : Fragment() {
     private val privateKey = "68b5881e-be78-4765-8037-c4ca1e74af1f" //<- Key de Pokemon TCG API
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,6 +42,11 @@ class CardsFragment : Fragment() {
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_cards, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        (activity as? AppCompatActivity)?.supportActionBar?.title = getString(R.string.cards_navigation)
     }
 
     private fun md5(input: String): String{
