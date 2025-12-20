@@ -19,7 +19,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"/>
 
-    <!-- Error layout -->
     <LinearLayout
         android:id="@+id/errorLayout"
         android:layout_width="match_parent"
@@ -32,14 +31,17 @@
             android:id="@+id/errorText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No se pudieron cargar las cartas"
+            android:text="@string/api_error"
             android:textSize="16sp"
-            android:padding="8dp"/>
+            android:padding="8dp"
+            android:textColor="@color/black"/>
 
         <Button
             android:id="@+id/retryButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Reintentar"/>
+            android:text="@string/btn_retry"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/lightRed"/>
     </LinearLayout>
 </FrameLayout>

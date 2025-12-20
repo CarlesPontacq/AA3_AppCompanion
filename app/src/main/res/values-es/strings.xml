@@ -5,4 +5,9 @@
     <string name="deck_navigation">Mazo</string>
     <string name="chat_navigation">Chat</string>
     <string name="profile_navigation">Perfil</string>
+    <string name="btn_retry">Reintentar</string>
+    <string name="api_error">No se pudieron cargar las cartas</string>
+    <string name="app_login_title">Iniciar sesión</string>
+    <string name="btn_login">Iniciar sesión</string>
+    <string name="btn_register">Registrarse</string>
 </resources>
