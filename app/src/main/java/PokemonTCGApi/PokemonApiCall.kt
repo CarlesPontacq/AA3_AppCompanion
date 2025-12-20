@@ -20,9 +20,9 @@ object PokemonApiCall {
 
     val httpClient = OkHttpClient.Builder()
         .addInterceptor(authInterceptor)
-        .connectTimeout(100, TimeUnit.SECONDS)
-        .readTimeout(100, TimeUnit.SECONDS)
-        .writeTimeout(100, TimeUnit.SECONDS)
+        .connectTimeout(10, TimeUnit.SECONDS)
+        .readTimeout(50, TimeUnit.SECONDS)
+        .writeTimeout(10, TimeUnit.SECONDS)
         .build()
 
     val apiService: PokemonApiInstance by lazy {
