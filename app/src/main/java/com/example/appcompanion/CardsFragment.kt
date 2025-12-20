@@ -1,51 +1,193 @@
 package com.example.appcompanion
 
-import PokemonTCGApi.PokemonApiCall
+import Models.PokemonCardAdapter
+import PokemonApi.PokemonApiCall
+import PokemonApi.PokemonCard
+import PokemonApi.PokemonCardResponse
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ProgressBar
+import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.math.BigInteger
 import java.security.MessageDigest
+import java.util.concurrent.TimeUnit
 
 class CardsFragment : Fragment() {
-    private val privateKey = "68b5881e-be78-4765-8037-c4ca1e74af1f" //<- Key de Pokemon TCG API
+
+    private lateinit var recyclerView: RecyclerView
+    private val cardsList = mutableListOf<PokemonCard>()
+    private lateinit var adapter: PokemonCardAdapter
+    private lateinit var loadingBar: ProgressBar
+
+    private lateinit var errorLayout: View
+    private lateinit var retryButton: Button
+
+    private lateinit var searchView: SearchView
+    private var lastQuery: String? = null
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val timestamp = System.currentTimeMillis().toString()
-        val hash = md5("$timestamp$privateKey")
 
-        val call = PokemonApiCall.apiService.getCards(privateKey, timestamp, hash)
+        val view = inflater.inflate(R.layout.fragment_cards, container, false)
 
-        /*
-        call.enqueue(object : Callback<MarvelResponse> {
-            override fun onResponse(call: Call<MarvelResponse>, response: Response<MarvelResponse>) {
-                if (response.isSuccessful) {
-                    val characters = response.body()?.data?.results
-                    characters?.forEach { character ->
-                        Log.d("Character", "Name: ${character.name}, Description: ${character.descrption}")
-                    }
-                }else {
-                    Log.e("ApiError", "Response not successful: ${response.code()} - ${response.message()}")
+        recyclerView = view.findViewById(R.id.cardsRecycler)
+        loadingBar = view.findViewById(R.id.progressBar)
+        searchView = view.findViewById(R.id.searchView)
+
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
+        adapter = PokemonCardAdapter(cardsList)
+        recyclerView.adapter = adapter
+
+        errorLayout = view.findViewById(R.id.errorLayout)
+        retryButton = view.findViewById(R.id.retryButton)
+
+        retryButton.setOnClickListener {
+            loadCards(lastQuery)
+        }
+
+        loadCards(null)
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (!query.isNullOrBlank()) {
+                    loadCards(query)
                 }
+                return true
             }
-            override fun onFailure(call: Call<MarvelResponse>, t: Throwable) {
-                Log.e("ApiError", t.message ?: "Unknown error")
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText.isNullOrBlank()) {
+                    loadCards(null)
+                }
+                return true
             }
         })
-         */
-
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_cards, container, false)
+        return view
     }
 
-    private fun md5(input: String): String{
-        val md = MessageDigest.getInstance("MD5")
-        return BigInteger(1, md.digest(input.toByteArray())).toString(16).padStart(32, '0')
+    private fun loadCards(query: String? = null) {
+        showLoading()
+        lastQuery = query
+
+        Log.d("PokemonCard", "Loading: ${query}")
+        val randomPage = (1..100).random()
+
+        val call: Call<PokemonCardResponse> =
+            if (query.isNullOrBlank()) {
+                // Random
+                PokemonApiCall.apiService.searchCards(
+                    query = null,
+                    page = randomPage,
+                    pageSize = 21
+                )
+            } else {
+                // Búsqueda
+                PokemonApiCall.apiService.searchCards(
+                    query = "name:$query",
+                    page = 1,
+                    pageSize = 21
+                )
+            }
+
+        call.enqueue(object : Callback<PokemonCardResponse> {
+
+            override fun onResponse(
+                call: Call<PokemonCardResponse>,
+                response: Response<PokemonCardResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val cards = response.body()?.data ?: emptyList()
+
+                    cardsList.clear()
+                    cardsList.addAll(cards)
+                    adapter.notifyDataSetChanged()
+
+                    showContent()
+                } else {
+                    showError()
+                }
+            }
+
+            override fun onFailure(call: Call<PokemonCardResponse>, t: Throwable) {
+                Log.e("PokemonCard", "Error: ${t.message}")
+                showError()
+            }
+        })
+    }
+
+    private fun getRandomCards(){
+        showLoading()
+        Log.d("PokemonCard", "Loading")
+        val randomPage = (1..100).random()
+
+        val call = PokemonApiCall.apiService.searchCards(
+            query = null,
+            page = randomPage,
+            pageSize = 20
+        )
+
+        call.enqueue(object : Callback<PokemonCardResponse> {
+
+            override fun onResponse(
+                call: Call<PokemonCardResponse>,
+                response: Response<PokemonCardResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val cards = response.body()?.data ?: emptyList()
+                    cards.forEach{ card ->
+                        cardsList.clear()
+                        cardsList.addAll(cards)
+                        adapter.notifyDataSetChanged()
+                        Log.d(
+                            "PokemonCard", "Name: ${card.name}, Types: ${card.types}"
+                        )
+                    }
+
+                    showContent()
+                }
+            }
+
+            override fun onFailure(call: Call<PokemonCardResponse>, t: Throwable) {
+                showError()
+
+                Log.e("PokemonCard", "Error: ${t.message}")
+            }
+        })
+    }
+
+    private fun showLoading() {
+        loadingBar.visibility = View.VISIBLE
+        recyclerView.visibility = View.GONE
+        errorLayout.visibility = View.GONE
+    }
+
+    private fun showContent() {
+        loadingBar.visibility = View.GONE
+        recyclerView.visibility = View.VISIBLE
+        errorLayout.visibility = View.GONE
+    }
+
+    private fun showError() {
+        loadingBar.visibility = View.GONE
+        recyclerView.visibility = View.GONE
+        errorLayout.visibility = View.VISIBLE
     }
 }

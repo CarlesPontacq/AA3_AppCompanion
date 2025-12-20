@@ -1,9 +1,12 @@
 <resources>
-    <string name="app_name">AppCompanion</string>
+    <string name="app_name">PokeSync</string>
     <string name="cards_navigation">Cards</string>
     <string name="deck_navigation">Deck</string>
     <string name="chat_navigation">Chat</string>
     <string name="profile_navigation">Profile</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="btn_retry">Retry</string>
+    <string name="api_error">Could not load the cards</string>
+    <string name="app_login_title">Sign up</string>
+    <string name="btn_login">Login</string>
+    <string name="btn_register">Sign up</string>
 </resources>
