@@ -2,11 +2,9 @@ package com.example.appcompanion
 
 import Models.PokemonCardAdapter
 import PokemonApi.PokemonApiCall
-import PokemonApi.PokemonApiInstance
 import PokemonApi.PokemonCard
 import PokemonApi.PokemonCardResponse
 import android.os.Bundle
-import android.os.Debug
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import okhttp3.Interceptor
@@ -37,6 +36,10 @@ class CardsFragment : Fragment() {
     private lateinit var errorLayout: View
     private lateinit var retryButton: Button
 
+    private lateinit var searchView: SearchView
+    private var lastQuery: String? = null
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,8 +49,9 @@ class CardsFragment : Fragment() {
 
         recyclerView = view.findViewById(R.id.cardsRecycler)
         loadingBar = view.findViewById(R.id.progressBar)
+        searchView = view.findViewById(R.id.searchView)
 
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
         adapter = PokemonCardAdapter(cardsList)
         recyclerView.adapter = adapter
 
@@ -55,11 +59,78 @@ class CardsFragment : Fragment() {
         retryButton = view.findViewById(R.id.retryButton)
 
         retryButton.setOnClickListener {
-            getRandomCards()
+            loadCards(lastQuery)
         }
 
-        getRandomCards()
+        loadCards(null)
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (!query.isNullOrBlank()) {
+                    loadCards(query)
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText.isNullOrBlank()) {
+                    loadCards(null)
+                }
+                return true
+            }
+        })
         return view
+    }
+
+    private fun loadCards(query: String? = null) {
+        showLoading()
+        lastQuery = query
+
+        Log.d("PokemonCard", "Loading: ${query}")
+        val randomPage = (1..100).random()
+
+        val call: Call<PokemonCardResponse> =
+            if (query.isNullOrBlank()) {
+                // Random
+                PokemonApiCall.apiService.searchCards(
+                    query = null,
+                    page = randomPage,
+                    pageSize = 21
+                )
+            } else {
+                // Búsqueda
+                PokemonApiCall.apiService.searchCards(
+                    query = "name:$query",
+                    page = 1,
+                    pageSize = 21
+                )
+            }
+
+        call.enqueue(object : Callback<PokemonCardResponse> {
+
+            override fun onResponse(
+                call: Call<PokemonCardResponse>,
+                response: Response<PokemonCardResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val cards = response.body()?.data ?: emptyList()
+
+                    cardsList.clear()
+                    cardsList.addAll(cards)
+                    adapter.notifyDataSetChanged()
+
+                    showContent()
+                } else {
+                    showError()
+                }
+            }
+
+            override fun onFailure(call: Call<PokemonCardResponse>, t: Throwable) {
+                Log.e("PokemonCard", "Error: ${t.message}")
+                showError()
+            }
+        })
     }
 
     private fun getRandomCards(){
@@ -98,35 +169,6 @@ class CardsFragment : Fragment() {
                 showError()
 
                 Log.e("PokemonCard", "Error: ${t.message}")
-            }
-        })
-    }
-    private fun apiConnection(){
-        val call = PokemonApiCall.apiService.searchCards("name: pickachu")
-
-        call.enqueue(object : Callback<PokemonCardResponse>{
-            override fun onResponse(
-                call: Call<PokemonCardResponse>,
-                response: Response<PokemonCardResponse>
-            ) {
-                if(response.isSuccessful){
-                    val cards = response.body()?.data ?: emptyList()
-
-                    cards.forEach{ card ->
-                        Log.d(
-                            "PokemonCard", "Name: ${card.name}, Types: ${card.types}"
-                        )
-                    }
-                }
-                else{
-                    Log.e(
-                        "PokemonCard",
-                        "Response error: ${response.code()} - ${response.message()}"
-                    )
-                }
-            }
-            override fun onFailure(call: Call<PokemonCardResponse>, t: Throwable) {
-                Log.e("ApiError", t.message ?: "Unknown error")
             }
         })
     }
