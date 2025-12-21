@@ -1,0 +1,7 @@
+package Models
+
+data class User (
+    val uid: String = "",
+    val username: String = "",
+    val photoUrl: String? = null
+)
