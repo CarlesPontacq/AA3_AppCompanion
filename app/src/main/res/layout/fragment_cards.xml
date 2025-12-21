@@ -14,13 +14,62 @@
         app:backgroundTint="@color/darkerGray"
         />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:paddingTop="45dp"
+        >
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_pokemon"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:background="@color/darkerGray"
+            android:text="Pokémon"
+            android:textAllCaps="false"
+            app:backgroundTint="@color/gray"
+            app:iconGravity="textTop"
+            app:iconSize="24dp" />
+            <!-- app:icon="@drawable/ic_pokesync" -->
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_trainer"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:background="@color/darkerGray"
+            android:text="Entenadores"
+            android:textAllCaps="false"
+            app:backgroundTint="@color/gray"
+            app:iconGravity="textTop"
+            app:iconSize="24dp" />
+        <!-- app:icon="@drawable/ic_pokesync" -->
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_energy"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:background="@color/darkerGray"
+            android:text="Energias"
+            android:textAllCaps="false"
+            app:backgroundTint="@color/gray"
+            app:iconGravity="textTop"
+            app:iconSize="24dp" />
+        <!-- app:icon="@drawable/ic_pokesync" -->
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/cardsRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="50dp"
-        android:padding="8dp" />
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="80dp"/>
 
     <ProgressBar
         android:id="@+id/progressBar"

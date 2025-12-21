@@ -26,4 +26,11 @@ object AnalyticsManager : Application() {
         }
         firebaseAnalytics.logEvent("search_cards", bundle)
     }
+
+    fun logCategoryEvent(query: String){
+        val bundle = Bundle().apply {
+            putString("category_card_search", query)
+        }
+        Log.d("PokemonCard", "Event ${query}")
+        firebaseAnalytics.logEvent("category_card_search", bundle)    }
 }

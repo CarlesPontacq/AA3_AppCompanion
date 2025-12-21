@@ -22,26 +22,45 @@ import retrofit2.Response
 
 class CardsFragment : Fragment() {
 
+    //Card list
     private lateinit var recyclerView: RecyclerView
     private val cardsList = mutableListOf<PokemonCard>()
     private lateinit var adapter: PokemonCardAdapter
     private lateinit var loadingBar: ProgressBar
 
+    //Retry connection
     private lateinit var errorLayout: View
     private lateinit var retryButton: Button
 
+    //Category search
+    private lateinit var pokemonButton: Button
+    private lateinit var trainerButton: Button
+    private lateinit var energyButton: Button
+
     private lateinit var searchView: SearchView
     private var lastQuery: String? = null
+    private var queryCategory: String = "Pokémon"
+
+    private var pokemonQuery: String = "Pokémon"
+    private var trainerQuery: String = "Trainer"
+    private var energyQuery: String = "Energy"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        //Initialize layout
         val view = inflater.inflate(R.layout.fragment_cards, container, false)
+
+        queryCategory = pokemonQuery
 
         recyclerView = view.findViewById(R.id.cardsRecycler)
         loadingBar = view.findViewById(R.id.progressBar)
         searchView = view.findViewById(R.id.searchView)
+
+        pokemonButton = view.findViewById(R.id.btn_pokemon)
+        trainerButton = view.findViewById(R.id.btn_trainer)
+        energyButton = view.findViewById(R.id.btn_energy)
 
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
         adapter = PokemonCardAdapter(cardsList)
@@ -50,9 +69,29 @@ class CardsFragment : Fragment() {
         errorLayout = view.findViewById(R.id.errorLayout)
         retryButton = view.findViewById(R.id.retryButton)
 
+        //retry loading images + log an event
         retryButton.setOnClickListener {
             loadCards(lastQuery)
             AnalyticsManager.logRetryApiEvent()
+        }
+
+        
+        pokemonButton.setOnClickListener{
+            queryCategory = pokemonQuery
+            updateCategoryButtons()
+            loadCardsByCategory()
+        }
+
+        trainerButton.setOnClickListener{
+            queryCategory = trainerQuery
+            updateCategoryButtons()
+            loadCardsByCategory()
+        }
+
+        energyButton.setOnClickListener{
+            queryCategory = energyQuery
+            updateCategoryButtons()
+            loadCardsByCategory()
         }
 
         loadCards(null)
@@ -81,7 +120,7 @@ class CardsFragment : Fragment() {
         showLoading()
         lastQuery = query
 
-        Log.d("PokemonCard", "Loading: ${query}")
+        Log.d("PokemonCard", "Loading: ${queryCategory} ${query}")
         val randomPage = (1..100).random()
 
         val call: Call<PokemonCardResponse> =
@@ -133,6 +172,53 @@ class CardsFragment : Fragment() {
         })
     }
 
+    private fun loadCardsByCategory(query: String? = null) {
+        showLoading()
+        lastQuery = query
+        AnalyticsManager.logCategoryEvent(queryCategory)
+
+        Log.d("PokemonCard", "Loading: ${queryCategory}")
+        val randomPage = (1..100).random()
+
+        val call: Call<PokemonCardResponse> =
+            PokemonApiCall.apiService.searchCards(
+                query = "supertypes:${queryCategory}",
+                page = randomPage,
+                pageSize = 21
+            )
+
+        call.enqueue(object : Callback<PokemonCardResponse> {
+
+            override fun onResponse(
+                call: Call<PokemonCardResponse>,
+                response: Response<PokemonCardResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val cards = response.body()?.data ?: emptyList()
+
+                    cardsList.clear()
+                    cardsList.addAll(cards)
+                    adapter.notifyDataSetChanged()
+
+                    showContent()
+                } else {
+                    FirebaseCrashlytics.getInstance().recordException(
+                        Exception("API error ${response.code()}")
+                    )
+                    showError()
+                }
+            }
+
+            override fun onFailure(call: Call<PokemonCardResponse>, t: Throwable) {
+                Log.e("PokemonCard", "Error: ${t.message}")
+
+                FirebaseCrashlytics.getInstance().recordException(t)
+
+                showError()
+            }
+        })
+    }
+
     private fun showLoading() {
         loadingBar.visibility = View.VISIBLE
         recyclerView.visibility = View.GONE
@@ -149,5 +235,11 @@ class CardsFragment : Fragment() {
         loadingBar.visibility = View.GONE
         recyclerView.visibility = View.GONE
         errorLayout.visibility = View.VISIBLE
+    }
+
+    private fun updateCategoryButtons() {
+        pokemonButton.isSelected = queryCategory == pokemonQuery
+        trainerButton.isSelected = queryCategory == trainerQuery
+        energyButton.isSelected = queryCategory == energyQuery
     }
 }
