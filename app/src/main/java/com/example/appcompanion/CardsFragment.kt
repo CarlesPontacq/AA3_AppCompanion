@@ -69,13 +69,13 @@ class CardsFragment : Fragment() {
         errorLayout = view.findViewById(R.id.errorLayout)
         retryButton = view.findViewById(R.id.retryButton)
 
-        //retry loading images + log an event
+        //retry loading images + log a retry event
         retryButton.setOnClickListener {
             loadCards(lastQuery)
             AnalyticsManager.logRetryApiEvent()
         }
 
-        
+        //search by category buttons and change category to search
         pokemonButton.setOnClickListener{
             queryCategory = pokemonQuery
             updateCategoryButtons()
@@ -94,8 +94,10 @@ class CardsFragment : Fragment() {
             loadCardsByCategory()
         }
 
+        //Default load cards
         loadCards(null)
 
+        //logic to check if the searchView is used (It's blank or not) and log a search event
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -116,11 +118,16 @@ class CardsFragment : Fragment() {
         return view
     }
 
+    //function to load cards by search or by default
     private fun loadCards(query: String? = null) {
+        //First we show the loading progressBar and update the lastQuery
         showLoading()
         lastQuery = query
 
         Log.d("PokemonCard", "Loading: ${queryCategory} ${query}")
+
+        //We make a random to select random cards by default and we search cards based of
+        //if the query is null, blank or if it isn't
         val randomPage = (1..100).random()
 
         val call: Call<PokemonCardResponse> =
@@ -132,16 +139,16 @@ class CardsFragment : Fragment() {
                     pageSize = 21
                 )
             } else {
-                // Búsqueda
+                // Search
                 PokemonApiCall.apiService.searchCards(
                     query = "name:$query",
                     page = 1,
                     pageSize = 21
                 )
             }
-
         call.enqueue(object : Callback<PokemonCardResponse> {
-
+            //If we connect to the api we add the cards found on the list and we show the content
+            //If the api doesn't response we show the retry button
             override fun onResponse(
                 call: Call<PokemonCardResponse>,
                 response: Response<PokemonCardResponse>
@@ -172,7 +179,10 @@ class CardsFragment : Fragment() {
         })
     }
 
+    //function to load cards by category
     private fun loadCardsByCategory(query: String? = null) {
+        //First we show the progressBar and we make a random to select random cards by default and category
+        // and we call a log event to know if the user is searching by a category and which
         showLoading()
         lastQuery = query
         AnalyticsManager.logCategoryEvent(queryCategory)
@@ -188,7 +198,8 @@ class CardsFragment : Fragment() {
             )
 
         call.enqueue(object : Callback<PokemonCardResponse> {
-
+            //If we connect to the api we add the cards found on the list and we show the content
+            //If the api doesn't response we show the retry button
             override fun onResponse(
                 call: Call<PokemonCardResponse>,
                 response: Response<PokemonCardResponse>
@@ -219,6 +230,7 @@ class CardsFragment : Fragment() {
         })
     }
 
+    //Functions to show the content, the progress bar or the error layout
     private fun showLoading() {
         loadingBar.visibility = View.VISIBLE
         recyclerView.visibility = View.GONE
@@ -237,6 +249,7 @@ class CardsFragment : Fragment() {
         errorLayout.visibility = View.VISIBLE
     }
 
+    //function to know what category button is selected
     private fun updateCategoryButtons() {
         pokemonButton.isSelected = queryCategory == pokemonQuery
         trainerButton.isSelected = queryCategory == trainerQuery

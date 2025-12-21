@@ -27,12 +27,11 @@
             android:layout_height="80dp"
             android:layout_weight="1"
             android:background="@color/darkerGray"
-            android:text="Pokémon"
+            android:text="@string/btn_pokemon_cat"
             android:textAllCaps="false"
             app:backgroundTint="@color/gray"
             app:iconGravity="textTop"
             app:iconSize="24dp" />
-            <!-- app:icon="@drawable/ic_pokesync" -->
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_trainer"
@@ -40,12 +39,11 @@
             android:layout_height="80dp"
             android:layout_weight="1"
             android:background="@color/darkerGray"
-            android:text="Entenadores"
+            android:text="@string/btn_trainer_cat"
             android:textAllCaps="false"
             app:backgroundTint="@color/gray"
             app:iconGravity="textTop"
             app:iconSize="24dp" />
-        <!-- app:icon="@drawable/ic_pokesync" -->
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_energy"
@@ -53,12 +51,11 @@
             android:layout_height="80dp"
             android:layout_weight="1"
             android:background="@color/darkerGray"
-            android:text="Energias"
+            android:text="@string/btn_energy_cat"
             android:textAllCaps="false"
             app:backgroundTint="@color/gray"
             app:iconGravity="textTop"
             app:iconSize="24dp" />
-        <!-- app:icon="@drawable/ic_pokesync" -->
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

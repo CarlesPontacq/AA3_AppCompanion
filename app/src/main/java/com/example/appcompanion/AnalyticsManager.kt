@@ -8,6 +8,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import retrofit2.http.Query
 
+//Singleton to log events on any activity needed, mainly the card list activity
 object AnalyticsManager : Application() {
 
     private lateinit var firebaseAnalytics: FirebaseAnalytics
