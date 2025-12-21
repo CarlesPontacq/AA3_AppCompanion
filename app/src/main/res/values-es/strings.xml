@@ -10,4 +10,7 @@
     <string name="app_login_title">Iniciar sesión</string>
     <string name="btn_login">Iniciar sesión</string>
     <string name="btn_register">Registrarse</string>
+    <string name="btn_pokemon_cat">Pokémon</string>
+    <string name="btn_trainer_cat">Entrenador</string>
+    <string name="btn_energy_cat">Energia</string>
 </resources>

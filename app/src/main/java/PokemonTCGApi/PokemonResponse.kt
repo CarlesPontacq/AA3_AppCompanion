@@ -1,9 +1,11 @@
 package PokemonApi
 
+// API response wrapper containing a list of cards
 data class PokemonCardResponse(
     val data: List<PokemonCard>
 )
 
+// Data model representing a Pokemon card
 data class PokemonCard(
     val id: String,
     val name: String,
@@ -13,6 +15,7 @@ data class PokemonCard(
     val images: CardImages
 )
 
+// Card image URLs (small and large sizes)
 data class CardImages(
     val small: String,
     val large: String

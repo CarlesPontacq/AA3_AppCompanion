@@ -8,6 +8,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import retrofit2.http.Query
 
+//Singleton to log events on any activity needed, mainly the card list activity
 object AnalyticsManager : Application() {
 
     private lateinit var firebaseAnalytics: FirebaseAnalytics
@@ -26,4 +27,11 @@ object AnalyticsManager : Application() {
         }
         firebaseAnalytics.logEvent("search_cards", bundle)
     }
+
+    fun logCategoryEvent(query: String){
+        val bundle = Bundle().apply {
+            putString("category_card_search", query)
+        }
+        Log.d("PokemonCard", "Event ${query}")
+        firebaseAnalytics.logEvent("category_card_search", bundle)    }
 }

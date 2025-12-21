@@ -15,6 +15,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavigationView: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        //Basic logic to manage the fragments
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -27,10 +28,12 @@ class MainActivity : AppCompatActivity() {
         loadFragment(CardsFragment())
     }
 
+    // function to load the selected fragment
     private fun loadFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction().replace(R.id.frame, fragment).commit()
     }
 
+    // function to detect when one fragment is selected and perform the loadFragment function
     private fun handleNavigationItemSelected(itemId: Int): Boolean {
         return when (itemId) {
             R.id.cards -> {

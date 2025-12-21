@@ -10,6 +10,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 
+//Singleton to manage the login information
 object LoginManager {
     private const val requestCodeGoogle = 9001
 
@@ -18,6 +19,7 @@ object LoginManager {
     private lateinit var googleClient: GoogleSignInClient
     private val auth = FirebaseAuth.getInstance()
 
+    // function to set up the google configurations for the login
     fun configure(activity: Activity){
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken("743427009820-9s0bc4joig8h05pt9f0qlev5g7tveu1c.apps.googleusercontent.com")
@@ -27,6 +29,8 @@ object LoginManager {
         googleClient = GoogleSignIn.getClient(activity, gso)
     }
 
+    // function that manages what the user is doing
+    // (login/register with google, login with firebase or register with firebase)
     fun startSession(activity: Activity){
         when(loginType){
             0 -> loginGoogle(activity)
@@ -36,6 +40,7 @@ object LoginManager {
         }
     }
 
+    //Actual function to login with google
     private fun loginGoogle(activity: Activity) {
         val intent = googleClient.signInIntent
         activity.startActivityForResult(intent, requestCodeGoogle)
@@ -65,6 +70,7 @@ object LoginManager {
         }
     }
 
+    // function to login with firebase and checks if it is successful or not
     fun loginFirebaseEmail(email: String, password: String,
                            onSuccess: () -> Unit,
                            onError: (String) -> Unit) {
@@ -75,6 +81,7 @@ object LoginManager {
             }
     }
 
+    // function to register with firebase and checks if it is successful or not
     fun registerFirebaseEmail(email: String, password: String,
                               onSuccess: () -> Unit,
                               onError: (String) -> Unit
