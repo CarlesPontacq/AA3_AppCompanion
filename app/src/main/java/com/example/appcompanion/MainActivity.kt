@@ -1,13 +1,13 @@
 package com.example.appcompanion
 
-import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
-import android.widget.LinearLayout
-import androidx.activity.enableEdgeToEdge
+import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -31,6 +31,12 @@ class MainActivity : AppCompatActivity() {
         toolbarView = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbarView)
 
+        // Create and set top left menu icon
+        toolbarView.setNavigationIcon(R.drawable.nav_menu_white_48dp)
+        toolbarView.setNavigationOnClickListener {
+
+        }
+
         // Open fragment for Cards, the default screen
         loadFragment(CardsFragment())
     }
@@ -38,6 +44,14 @@ class MainActivity : AppCompatActivity() {
     // Replace current fragment with the specified one
     private fun loadFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction().replace(R.id.frame, fragment).commit()
+
+        // Change toolbar options based on current fragment
+        showToolbarMenuButton()
+        /*
+        when(fragment) {
+            is CardsFragment -> showToolbarMenuButton()
+            else -> showBackArrowButton()
+        }*/
     }
 
     // Handle navbar item being tapped (change current screen)
@@ -60,6 +74,65 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             else -> false
+        }
+    }
+
+    // Inflate custom toolbar
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.custom_toolbar, menu)
+        return true
+    }
+
+    // Show and manage menu icon from top left of the toolbar
+    private fun showToolbarMenuButton()
+    {
+        toolbarView.navigationIcon = ContextCompat.getDrawable(this, R.drawable.nav_menu_white_48dp)
+        toolbarView.setNavigationOnClickListener {
+            showLeftMenuPopup()
+        }
+    }
+
+    // Show and manage back arrow from top left of the toolbar
+    private fun showBackArrowButton()
+    {
+        toolbarView.navigationIcon = ContextCompat.getDrawable(this, R.drawable.nav_chat_white_24dp)
+        toolbarView.setNavigationOnClickListener {
+
+        }
+    }
+
+    // Show and manage popup menu from top left menu icon in the toolbar
+    private fun showLeftMenuPopup() {
+        val popup = PopupMenu(this, toolbarView)
+        popup.menuInflater.inflate(R.menu.left_menu, popup.menu)
+
+        popup.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.changeTheme -> {
+                    changeAppTheme()
+                    true
+                }
+                else -> false
+            }
+        }
+
+        popup.show()
+    }
+
+    // Change app theme between light and dark
+    private fun changeAppTheme()
+    {
+        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val isDarkMode = when (currentNightMode) {
+            Configuration.UI_MODE_NIGHT_YES -> true
+            Configuration.UI_MODE_NIGHT_NO, Configuration.UI_MODE_NIGHT_UNDEFINED -> false
+            else -> false
+        }
+
+        if (isDarkMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         }
     }
 }

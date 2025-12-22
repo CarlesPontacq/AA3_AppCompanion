@@ -11,12 +11,11 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.85"
+        android:layout_height="100dp"
         android:background="@color/reddishBackground"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        android:titleTextColor="@color/white"/>
+        app:titleTextAppearance="@style/ToolbarTitleText"
+        app:buttonGravity="center_vertical"
+        app:titleMarginStart="50dp"/>
     />
 
     <FrameLayout
