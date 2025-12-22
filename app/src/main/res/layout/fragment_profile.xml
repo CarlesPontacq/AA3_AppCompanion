@@ -78,6 +78,7 @@
             android:backgroundTint="@color/lightRed"
             android:padding="0dp"
             android:text="@string/btn_logout"
+            android:textColor="@color/white"
             android:textSize="24sp" />
 
     </LinearLayout>
