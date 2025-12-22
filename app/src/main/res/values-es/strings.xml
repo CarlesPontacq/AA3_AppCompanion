@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cards_navigation">Cartas</string>
+    <string name="deck_navigation">Mazo</string>
+    <string name="chat_navigation">Chat</string>
+    <string name="profile_navigation">Perfil</string>
+    <string name="btn_retry">Reintentar</string>
+    <string name="api_error">No se pudieron cargar las cartas</string>
+    <string name="app_login_title">Iniciar sesión</string>
+    <string name="btn_login">Iniciar sesión</string>
+    <string name="btn_register">Registrarse</string>
+    <string name="btn_pokemon_cat">Pokémon</string>
+    <string name="btn_trainer_cat">Entrenador</string>
+    <string name="btn_energy_cat">Energia</string>
+    <string name="btn_logout">Cerrar sesión</string>
+    <string name="user_profile_starting_text">Usuario:</string>
+    <string name="menu_change_theme">Cambiar tema</string>
+    <string name="menu_close_app">Cerrar aplicación</string>
+</resources>
