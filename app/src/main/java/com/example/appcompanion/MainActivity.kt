@@ -112,6 +112,10 @@ class MainActivity : AppCompatActivity() {
                     changeAppTheme()
                     true
                 }
+                R.id.closeApp -> {
+                    closeApp()
+                    true
+                }
                 else -> false
             }
         }
@@ -134,5 +138,11 @@ class MainActivity : AppCompatActivity() {
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         }
+    }
+
+    // Close application
+    private fun closeApp()
+    {
+        finishAffinity()
     }
 }

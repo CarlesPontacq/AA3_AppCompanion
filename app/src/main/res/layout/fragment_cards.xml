@@ -29,6 +29,7 @@
             android:background="@color/darkerGray"
             android:text="@string/btn_pokemon_cat"
             android:textAllCaps="false"
+            android:textColor="@color/white"
             app:backgroundTint="@color/gray"
             app:iconGravity="textTop"
             app:iconSize="24dp" />
@@ -41,6 +42,7 @@
             android:background="@color/darkerGray"
             android:text="@string/btn_trainer_cat"
             android:textAllCaps="false"
+            android:textColor="@color/white"
             app:backgroundTint="@color/gray"
             app:iconGravity="textTop"
             app:iconSize="24dp" />
@@ -53,6 +55,7 @@
             android:background="@color/darkerGray"
             android:text="@string/btn_energy_cat"
             android:textAllCaps="false"
+            android:textColor="@color/white"
             app:backgroundTint="@color/gray"
             app:iconGravity="textTop"
             app:iconSize="24dp" />
