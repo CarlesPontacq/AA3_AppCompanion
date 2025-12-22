@@ -12,4 +12,5 @@
     <string name="btn_pokemon_cat">Pokemon</string>
     <string name="btn_trainer_cat">Trainer</string>
     <string name="btn_energy_cat">Energy</string>
+    <string name="btn_logout">Log out</string>
 </resources>

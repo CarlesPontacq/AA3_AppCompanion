@@ -1,6 +1,8 @@
 package com.example.appcompanion
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager.OnActivityResultListener
 import android.util.Log
@@ -22,8 +24,12 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var emailField: EditText
     private lateinit var passwordField: EditText
 
+    private lateinit var prefs : SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // If the user is not logged in already, continue with login/register screen
         setContentView(R.layout.activity_login)
 
         LoginManager.configure(this)
