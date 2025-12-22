@@ -43,15 +43,32 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/profileUsernameText"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.25"
-            android:text="TextView"
-            android:textAlignment="center"
-            android:textSize="24sp"
-            tools:text="User:\nUsername" />
+            android:layout_weight="0.15"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/profileUsernameBase"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:paddingBottom="15dp"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:text="@string/user_profile_starting_text" />
+
+            <TextView
+                android:id="@+id/profileUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:text="TextView"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                tools:text="Username" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/logoutButton"

@@ -13,4 +13,5 @@
     <string name="btn_trainer_cat">Trainer</string>
     <string name="btn_energy_cat">Energy</string>
     <string name="btn_logout">Log out</string>
+    <string name="user_profile_starting_text">User:</string>
 </resources>
