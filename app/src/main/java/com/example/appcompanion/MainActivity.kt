@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var toolbarView: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        //Basic logic to manage the fragments
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 

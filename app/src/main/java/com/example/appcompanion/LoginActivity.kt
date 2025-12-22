@@ -36,6 +36,8 @@ class LoginActivity : AppCompatActivity() {
         emailField = findViewById(R.id.input_user)
         passwordField = findViewById(R.id.input_password)
 
+        //logic that checks if the firebase login is correct or not, and if it is it loads the next activity
+        // it also shows a success or error message, it is assigned to a button
         findViewById<Button>(R.id.btn_login).setOnClickListener {
             val email = emailField.text.toString()
             val password = passwordField.text.toString()
@@ -51,6 +53,8 @@ class LoginActivity : AppCompatActivity() {
 
         }
 
+        //logic that checks if the firebase register is correct or not, and if it is it loads the next activity
+        // it also shows a success or error message, it is assigned to a button
         findViewById<Button>(R.id.btn_register).setOnClickListener {
             val email = emailField.text.toString()
             val password = passwordField.text.toString()
@@ -71,6 +75,8 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    //function that checks if the google login is correct or not, and if it is it loads the next activity
+    // it also shows a success or error message
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -87,6 +93,7 @@ class LoginActivity : AppCompatActivity() {
         )
     }
 
+    //simple function to go to the next activity
     fun goToNextActivity(){
         val intent = Intent(this, MainActivity::class.java);
         startActivity(intent)

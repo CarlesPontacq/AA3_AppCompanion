@@ -7,7 +7,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 
+// Simple class that when the users clicks on any part of the screen it goes to the next screen
 class SplashScreenActivity : AppCompatActivity() {
     private lateinit var splashScreenLayout: LinearLayout
 

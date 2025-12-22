@@ -1,23 +1,22 @@
-package PokemonTCGApi
+package PokemonApi
 
-data class PokemonResponse(
-    val code: Int,
-    val status: String,
-    val data: PokemonData
+// API response wrapper containing a list of cards
+data class PokemonCardResponse(
+    val data: List<PokemonCard>
 )
 
-data class PokemonData(
-    val results: List<PokemonCard>
-)
-
+// Data model representing a Pokemon card
 data class PokemonCard(
-    val id: Int,
+    val id: String,
     val name: String,
-    val descrption: String,
-    val thumbnail: Thumbnail
+    val supertype: String?,
+    val subtypes: List<String>?,
+    val types: List<String>?,
+    val images: CardImages
 )
 
-data class Thumbnail(
-    val path: String,
-    val extension: String
+// Card image URLs (small and large sizes)
+data class CardImages(
+    val small: String,
+    val large: String
 )
