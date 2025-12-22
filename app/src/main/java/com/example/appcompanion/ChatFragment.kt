@@ -16,8 +16,18 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import androidx.appcompat.app.AppCompatActivity
 
+// TODO: Rename parameter arguments, choose names that match
+// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+private const val ARG_PARAM1 = "param1"
+private const val ARG_PARAM2 = "param2"
 
+/**
+ * A simple [Fragment] subclass.
+ * Use the [ChatFragment.newInstance] factory method to
+ * create an instance of this fragment.
+ */
 class ChatFragment : Fragment() {
     private lateinit var recycler: RecyclerView
     private val users = mutableListOf<User>()
@@ -46,6 +56,11 @@ class ChatFragment : Fragment() {
         loadUsers()
 
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        (activity as? AppCompatActivity)?.supportActionBar?.title = getString(R.string.chat_navigation)
     }
 
     private fun loadUsers() {

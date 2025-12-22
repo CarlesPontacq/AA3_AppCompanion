@@ -19,6 +19,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import androidx.appcompat.app.AppCompatActivity
 
 class CardsFragment : Fragment() {
 
@@ -228,6 +229,11 @@ class CardsFragment : Fragment() {
                 showError()
             }
         })
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        (activity as? AppCompatActivity)?.supportActionBar?.title = getString(R.string.cards_navigation)
     }
 
     //Functions to show the content, the progress bar or the error layout
