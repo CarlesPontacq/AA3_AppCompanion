@@ -29,6 +29,15 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Check if user is already logged in, and if they are skip this activity
+        prefs = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val isLoggedIn : Boolean = prefs.getBoolean("is_logged_in", false)
+
+        if (isLoggedIn) {
+            goToNextActivity()
+            return
+        }
+
         // If the user is not logged in already, continue with login/register screen
         setContentView(R.layout.activity_login)
 
@@ -52,6 +61,7 @@ class LoginActivity : AppCompatActivity() {
 
             LoginManager.loginFirebaseEmail(email, password, {
                 Toast.makeText(this, "Login correcto", Toast.LENGTH_SHORT).show()
+                saveLoginLocally(email)
                 goToNextActivity()
             }, {
                 error -> Toast.makeText(this, "Error: $error", Toast.LENGTH_SHORT).show()
@@ -72,6 +82,7 @@ class LoginActivity : AppCompatActivity() {
                 password,
                 onSuccess = {
                     Toast.makeText(this, "Registro correcto", Toast.LENGTH_SHORT).show()
+                    saveLoginLocally(email)
                     goToNextActivity()
                 },
                 onError = { error ->
@@ -100,8 +111,16 @@ class LoginActivity : AppCompatActivity() {
     }
 
     //simple function to go to the next activity
-    fun goToNextActivity(){
+    private fun goToNextActivity(){
         val intent = Intent(this, MainActivity::class.java);
         startActivity(intent)
+    }
+
+    private fun saveLoginLocally(email: String) {
+        val username = email.substringBefore("@")
+        prefs.edit()
+            .putString("username", username)
+            .putBoolean("is_logged_in", true)
+            .apply()
     }
 }
