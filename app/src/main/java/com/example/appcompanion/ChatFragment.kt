@@ -7,6 +7,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,21 +19,10 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.Query
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ChatFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ChatFragment : Fragment() {
-    private lateinit var recycler: RecyclerView
-    private val users = mutableListOf<User>()
-    private lateinit var adapter: UserAdapter
     private lateinit var database: DatabaseReference
 
     override fun onCreateView(
@@ -39,68 +30,100 @@ class ChatFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val databaseUrl = "https://appcompanionpokemontcg-default-rtdb.europe-west1.firebasedatabase.app/"
-        database = FirebaseDatabase.getInstance(databaseUrl).getReference("users")
-
         val view = inflater.inflate(R.layout.fragment_chat, container, false)
 
-        recycler = view.findViewById(R.id.usersRecycler)
-        recycler.layoutManager = LinearLayoutManager(requireContext())
+        val databaseUrl = "https://appcompanionpokemontcg-default-rtdb.europe-west1.firebasedatabase.app/"
+        database = FirebaseDatabase.getInstance(databaseUrl).getReference("messages")
 
-        adapter = UserAdapter(users) { selectedUser ->
-            openChatWith(selectedUser)
+        /*
+        //Enviar mensaje
+        val dataId = database.push().key
+
+        val messageData = mapOf(
+            "user" to "Carles",
+            "message" to "Funciona"
+        )
+
+        if(dataId != null){
+            database.child(dataId).setValue(messageData)
+                .addOnSuccessListener{result ->
+                    Log.d("Chat test", "Insert correcto")
+                }
+                .addOnFailureListener { exception ->
+                    Log.d("Chat test", "Error ${exception.message}")
+                }
         }
+        */
 
-        recycler.adapter = adapter
+        /*
+        //Recibir mensajes
+        val query: Query = database.orderByChild("user").equalTo("Carles")
 
-        loadUsers()
+        query.get()
+            .addOnSuccessListener { snapshot ->
+                if(snapshot.exists()){
+                    for (dataSnapshot in snapshot.children){
+                        val message = dataSnapshot.child("message").getValue(String::class.java)
+                        Log.d("Chat test", "Message: $message")
+                    }
+                }
+                else {
+                    Log.d("Chat test", "No messages found for user Jose")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("Chat test", "Error: ${exception.message}")
+            }
+        */
+
+        database.addChildEventListener(createChildListenerEvent())
 
         return view
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        (activity as? AppCompatActivity)?.supportActionBar?.title = getString(R.string.chat_navigation)
-    }
-
-    private fun loadUsers() {
-        Log.d("PokemonCard", "Loading users")
-
-        val currentUid = FirebaseAuth.getInstance().currentUser?.uid
-        if(currentUid == null){
-            Log.e("PokemonCard", "User not authentificated")
-            return
-        }
-
-        database.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                users.clear()
-
-                for (userSnap in snapshot.children) {
-                    val user = userSnap.getValue(User::class.java)
-                    if (user != null && user.uid != currentUid) {
-                        users.add(user)
+    private fun createChildListenerEvent(): ChildEventListener{
+        return object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                database.ref.get().addOnSuccessListener { fullSnapshot ->
+                    for(child in fullSnapshot.children){
+                        val u = child.child("user").getValue(String::class.java)
+                        val m = child.child("message").getValue(String::class.java)
+                        Log.d("Chat test", "User: $u, Message: $m")
                     }
                 }
+                    .addOnFailureListener { e ->
+                        Log.d("Chat test", "Error fetching full collection: ${e.message}")
+                    }
+            }
 
-                adapter.notifyDataSetChanged()
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                val newUser = snapshot.child("user").getValue(String::class.java)
+                val newMessage = snapshot.child("message").getValue(String::class.java)
+
+                val oldSnapshot = previousChildName?.let { database.child(it).get().result}
+                val oldUser = oldSnapshot?.child("user")?.getValue(String::class.java)
+                val oldMessage = oldSnapshot?.child("message")?.getValue(String::class.java)
+
+                Log.d("Chat test", "Changed - Old User: $oldUser, Old Message: $oldMessage")
+                Log.d("Chat test", "Changed - New User: $newUser, New Message: $newMessage")
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+                val user = snapshot.child("user").getValue(String::class.java)
+                val message = snapshot.child("message").getValue(String::class.java)
+
+                Log.d("Chat test", "Removed - User: $user, Message: $message")
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                val movedKey = snapshot.key
+
+                Log.d("Chat test", "Moved - From: $previousChildName, To: $movedKey")
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e("PokemonCard", error.toString())
+                Log.d("Chat test", "Cancelled - Error: ${error.message}")
             }
-        })
-    }
-
-    private fun openChatWith(user: User) {
-        /*
-        val fragment = ChatConversationFragment.newInstance(user.uid, user.username)
-
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, fragment)
-            .addToBackStack(null)
-            .commit()
-
-         */
+        }
     }
 }
