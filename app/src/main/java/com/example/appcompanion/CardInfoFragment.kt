@@ -18,6 +18,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -44,6 +45,7 @@ class CardInfoFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_card_info, container, false)
 
         cardImage = view.findViewById(R.id.detailedCardImage)
+        cardTypeImage = view.findViewById(R.id.cardType)
         cardSupertypeText = view.findViewById(R.id.cardSuptertype)
         cardHpText = view.findViewById(R.id.cardHp)
         cardRetreatCostLayout = view.findViewById(R.id.cardRetreatCost)
@@ -63,6 +65,14 @@ class CardInfoFragment : Fragment() {
     }
 
     private fun loadCard(id: String) {
+
+        // TESTEO MIENTRAS NO VA LA API ------
+        val mockCard = loadMockCard()
+        displayCardInfo(mockCard)
+        (activity as? AppCompatActivity)?.supportActionBar?.title = mockCard.name
+        return
+        // -----------------------------------
+
         val call = PokemonApiCall.apiService.getCard(id)
 
         call.enqueue(object : Callback<SinglePokemonCardResponse> {
@@ -109,11 +119,15 @@ class CardInfoFragment : Fragment() {
 
         cardHpText.text = card.hp
 
-        cardRetreatCostLayout.removeAllViews()
-        card.retreatCost?.forEach {
-            val textView = TextView(requireContext())
-            textView.text = it
-            cardRetreatCostLayout.addView(textView)
+        card.retreatCost?.forEachIndexed { index, costType ->
+            if (index < cardRetreatCostLayout.childCount) {
+                val imageView = cardRetreatCostLayout.getChildAt(index) as ImageView
+                val retreatTypeEnum = PokemonType.fromString(costType)
+
+                imageView.setImageResource(retreatTypeEnum.drawableRes)
+                imageView.visibility = View.VISIBLE
+                Log.d("PokemonDetailedCard", "Draw ${index} cost")
+            }
         }
 
         val firstAttack = card.attacks?.firstOrNull()
@@ -121,5 +135,31 @@ class CardInfoFragment : Fragment() {
         attackDamageText.text = firstAttack?.damage?.toString() ?: "-"
 
         (activity as? AppCompatActivity)?.supportActionBar?.title = card.name
+    }
+
+    // FUNCIÓN DE TESTEO MIENTRAS NO VA LA API
+    private fun loadMockCard(): DetailedPokemonCard {
+        val mockJson = """
+        {
+          "id": "xy1-1",
+          "name": "Venusaur-EX",
+          "supertype": "Pokémon",
+          "hp": "180",
+          "types": ["Grass"],
+          "attacks": [
+            {
+              "name": "Poison Powder",
+              "damage": "60"
+            }
+          ],
+          "retreatCost": ["Colorless","Colorless","Colorless","Colorless"],
+          "images": {
+            "small": "https://images.pokemontcg.io/xy1/1.png",
+            "large": "https://images.pokemontcg.io/xy1/1_hires.png"
+          }
+        }
+    """.trimIndent()
+
+        return Gson().fromJson(mockJson, DetailedPokemonCard::class.java)
     }
 }
