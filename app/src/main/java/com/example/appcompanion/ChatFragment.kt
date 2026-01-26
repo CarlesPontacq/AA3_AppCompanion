@@ -1,5 +1,7 @@
 package com.example.appcompanion
 
+import Models.Message
+import Models.MessageAdapter
 import Models.User
 import Models.UserAdapter
 import android.os.Bundle
@@ -7,6 +9,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,90 +21,99 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.Query
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ChatFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ChatFragment : Fragment() {
-    private lateinit var recycler: RecyclerView
-    private val users = mutableListOf<User>()
-    private lateinit var adapter: UserAdapter
     private lateinit var database: DatabaseReference
+
+    private val messages = mutableListOf<Message>()
+    private lateinit var adapter: MessageAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val databaseUrl = "https://appcompanionpokemontcg-default-rtdb.europe-west1.firebasedatabase.app/"
-        database = FirebaseDatabase.getInstance(databaseUrl).getReference("users")
-
         val view = inflater.inflate(R.layout.fragment_chat, container, false)
 
-        recycler = view.findViewById(R.id.usersRecycler)
-        recycler.layoutManager = LinearLayoutManager(requireContext())
+        val rvMessages = view.findViewById<RecyclerView>(R.id.rvMessages)
+        val etMessage = view.findViewById<EditText>(R.id.etMessage)
+        val btnSend = view.findViewById<Button>(R.id.btnSend)
 
-        adapter = UserAdapter(users) { selectedUser ->
-            openChatWith(selectedUser)
-        }
+        adapter = MessageAdapter(messages)
+        rvMessages.layoutManager = LinearLayoutManager(requireContext())
+        rvMessages.adapter = adapter
 
-        recycler.adapter = adapter
+        val databaseUrl = "https://appcompanionpokemontcg-default-rtdb.europe-west1.firebasedatabase.app/"
+        database = FirebaseDatabase.getInstance(databaseUrl).getReference("messages")
 
-        loadUsers()
-
-        return view
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        (activity as? AppCompatActivity)?.supportActionBar?.title = getString(R.string.chat_navigation)
-    }
-
-    private fun loadUsers() {
-        Log.d("PokemonCard", "Loading users")
-
-        val currentUid = FirebaseAuth.getInstance().currentUser?.uid
-        if(currentUid == null){
-            Log.e("PokemonCard", "User not authentificated")
-            return
-        }
-
-        database.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                users.clear()
-
-                for (userSnap in snapshot.children) {
-                    val user = userSnap.getValue(User::class.java)
-                    if (user != null && user.uid != currentUid) {
-                        users.add(user)
-                    }
+        //Enviar mensaje
+        btnSend.setOnClickListener {
+            val text = etMessage.text.toString().trim()
+            if(text.isNotEmpty()){
+                val uid = FirebaseAuth.getInstance().currentUser?.uid ?: "anon"
+                var username = FirebaseAuth.getInstance().currentUser?.displayName ?: "Anon"
+                if(username.isNullOrBlank()){
+                    username = "Anon"
                 }
 
-                adapter.notifyDataSetChanged()
+                Log.d("Chat test", "username")
+
+                val message = Message(
+                    senderId = uid,
+                    senderName = username,
+                    text = text,
+                    timestamp = System.currentTimeMillis()
+                )
+
+                database.push().setValue(message)
+                etMessage.text.clear()
+            }
+        }
+
+        database.addChildEventListener(object : ChildEventListener{
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val message = snapshot.getValue(Message::class.java)
+                if(message != null){
+                    messages.add(message)
+                    adapter.notifyItemInserted(messages.size - 1)
+                    rvMessages.scrollToPosition(messages.size - 1)
+                    Log.d("Chat test",
+                        "User: ${message.senderId}, Message: ${message.text} - From: ${message.senderName}")
+                }
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                val newUser = snapshot.child("user").getValue(String::class.java)
+                val newMessage = snapshot.child("message").getValue(String::class.java)
+
+                val oldSnapshot = previousChildName?.let { database.child(it).get().result}
+                val oldUser = oldSnapshot?.child("user")?.getValue(String::class.java)
+                val oldMessage = oldSnapshot?.child("message")?.getValue(String::class.java)
+
+                Log.d("Chat test", "Changed - Old User: $oldUser, Old Message: $oldMessage")
+                Log.d("Chat test", "Changed - New User: $newUser, New Message: $newMessage")
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+                val user = snapshot.child("user").getValue(String::class.java)
+                val message = snapshot.child("message").getValue(String::class.java)
+
+                Log.d("Chat test", "Removed - User: $user, Message: $message")
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                val movedKey = snapshot.key
+
+                Log.d("Chat test", "Moved - From: $previousChildName, To: $movedKey")
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e("PokemonCard", error.toString())
+                Log.d("Chat test", "Cancelled - Error: ${error.message}")
             }
         })
-    }
 
-    private fun openChatWith(user: User) {
-        /*
-        val fragment = ChatConversationFragment.newInstance(user.uid, user.username)
-
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, fragment)
-            .addToBackStack(null)
-            .commit()
-
-         */
+        return view
     }
 }
