@@ -22,6 +22,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import androidx.appcompat.app.AppCompatActivity
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.appcompanion.AnalyticsManager.getSharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -29,6 +30,7 @@ import com.google.gson.reflect.TypeToken
 class CardsFragment : Fragment() {
 
     //Card list
+    private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var recyclerView: RecyclerView
     private val cardsList = mutableListOf<PokemonCard>()
     private lateinit var adapter: PokemonCardAdapter
@@ -74,6 +76,9 @@ class CardsFragment : Fragment() {
         adapter = PokemonCardAdapter(cardsList)
         recyclerView.adapter = adapter
 
+        swipeRefresh = view.findViewById(R.id.swipeRefresh)
+        swipeRefresh.setProgressViewOffset(false, 275, 375)
+
         errorLayout = view.findViewById(R.id.errorLayout)
         retryButton = view.findViewById(R.id.retryButton)
 
@@ -103,6 +108,12 @@ class CardsFragment : Fragment() {
         }
 
         prefs = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+
+        swipeRefresh.setOnRefreshListener {
+            resetLocalCards()
+            loadCards(null)
+            swipeRefresh.isRefreshing = false
+        }
 
         //Default load cards
         loadCards(null)
@@ -293,5 +304,10 @@ class CardsFragment : Fragment() {
     private fun saveCardsLocally(cards: List<PokemonCard>) {
         val jsonOfCards = Gson().toJson(cards)
         prefs.edit().putString("cached_cards", jsonOfCards).apply()
+    }
+
+    // Reset cards stored locally so that the API knows to call for new ones
+    private fun resetLocalCards() {
+        prefs.edit().putString("cached_cards", null).apply()
     }
 }
