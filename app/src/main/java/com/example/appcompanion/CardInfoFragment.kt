@@ -63,14 +63,6 @@ class CardInfoFragment : Fragment() {
     }
 
     private fun loadCard(id: String) {
-
-        // TESTEO MIENTRAS NO VA LA API ------
-        val mockCard = loadMockCard()
-        displayCardInfo(mockCard)
-        (activity as? AppCompatActivity)?.supportActionBar?.title = mockCard.name
-        return
-        // -----------------------------------
-
         val call = PokemonApiCall.apiService.getCard(id)
 
         call.enqueue(object : Callback<SinglePokemonCardResponse> {
@@ -132,35 +124,5 @@ class CardInfoFragment : Fragment() {
         attackDamageText.text = firstAttack?.damage?.toString() ?: "-"
 
         (activity as? AppCompatActivity)?.supportActionBar?.title = card.name
-    }
-
-    // FUNCIÓN DE TESTEO MIENTRAS NO VA LA API
-    private fun loadMockCard(): DetailedPokemonCard {
-        val mockJson = """
-        {
-          "id": "xy1-1",
-          "name": "Venusaur-EX",
-          "supertype": "Pokémon",
-          "subtypes": [
-              "Basic",
-              "EX"
-            ],
-          "hp": "180",
-          "types": ["Grass"],
-          "attacks": [
-            {
-              "name": "Poison Powder",
-              "damage": "60"
-            }
-          ],
-          "retreatCost": ["Colorless","Colorless","Colorless","Colorless"],
-          "images": {
-            "small": "https://images.pokemontcg.io/xy1/1.png",
-            "large": "https://images.pokemontcg.io/xy1/1_hires.png"
-          }
-        }
-    """.trimIndent()
-
-        return Gson().fromJson(mockJson, DetailedPokemonCard::class.java)
     }
 }
