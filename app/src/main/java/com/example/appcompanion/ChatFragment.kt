@@ -4,6 +4,8 @@ import Models.Message
 import Models.MessageAdapter
 import Models.User
 import Models.UserAdapter
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -26,6 +28,7 @@ import com.google.firebase.database.Query
 
 class ChatFragment : Fragment() {
     private lateinit var database: DatabaseReference
+    private lateinit var prefs : SharedPreferences
 
     private val messages = mutableListOf<Message>()
     private lateinit var adapter: MessageAdapter
@@ -41,6 +44,8 @@ class ChatFragment : Fragment() {
         val etMessage = view.findViewById<EditText>(R.id.etMessage)
         val btnSend = view.findViewById<Button>(R.id.btnSend)
 
+        prefs = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+
         adapter = MessageAdapter(messages)
         rvMessages.layoutManager = LinearLayoutManager(requireContext())
         rvMessages.adapter = adapter
@@ -53,10 +58,7 @@ class ChatFragment : Fragment() {
             val text = etMessage.text.toString().trim()
             if(text.isNotEmpty()){
                 val uid = FirebaseAuth.getInstance().currentUser?.uid ?: "anon"
-                var username = FirebaseAuth.getInstance().currentUser?.displayName ?: "Anon"
-                if(username.isNullOrBlank()){
-                    username = "Anon"
-                }
+                val username = prefs.getString("username", "Anon") ?: "Anon"
 
                 Log.d("Chat test", "username")
 
