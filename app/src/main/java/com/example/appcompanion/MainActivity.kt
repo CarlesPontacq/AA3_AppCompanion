@@ -54,6 +54,12 @@ class MainActivity : AppCompatActivity() {
         }*/
     }
 
+    // Replace current fragment with the specified one (specifically subfragments like card info)
+    public fun loadSubFragment(fragment: Fragment)
+    {
+        supportFragmentManager.beginTransaction().replace(R.id.frame, fragment).commit()
+    }
+
     // Handle navbar item being tapped (change current screen)
     private fun handleNavigationItemSelected(itemId: Int): Boolean {
         return when (itemId) {
