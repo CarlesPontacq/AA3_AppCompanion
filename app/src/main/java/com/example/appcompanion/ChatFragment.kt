@@ -1,5 +1,7 @@
 package com.example.appcompanion
 
+import Models.Message
+import Models.MessageAdapter
 import Models.User
 import Models.UserAdapter
 import android.os.Bundle
@@ -25,6 +27,9 @@ import com.google.firebase.database.Query
 class ChatFragment : Fragment() {
     private lateinit var database: DatabaseReference
 
+    private val messages = mutableListOf<Message>()
+    private lateinit var adapter: MessageAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -32,68 +37,47 @@ class ChatFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_chat, container, false)
 
+        val rvMessages = view.findViewById<RecyclerView>(R.id.rvMessages)
+        val etMessage = view.findViewById<EditText>(R.id.etMessage)
+        val btnSend = view.findViewById<Button>(R.id.btnSend)
+
+        adapter = MessageAdapter(messages)
+        rvMessages.layoutManager = LinearLayoutManager(requireContext())
+        rvMessages.adapter = adapter
+
         val databaseUrl = "https://appcompanionpokemontcg-default-rtdb.europe-west1.firebasedatabase.app/"
         database = FirebaseDatabase.getInstance(databaseUrl).getReference("messages")
 
-        /*
         //Enviar mensaje
-        val dataId = database.push().key
+        btnSend.setOnClickListener {
+            val text = etMessage.text.toString().trim()
+            if(text.isNotEmpty()){
+                val uid = FirebaseAuth.getInstance().currentUser?.uid ?: "anon"
+                val username = FirebaseAuth.getInstance().currentUser?.displayName ?: "Anon"
+                username?.isNullOrBlank() ?: "Anon"
 
-        val messageData = mapOf(
-            "user" to "Carles",
-            "message" to "Funciona"
-        )
+                val message = Message(
+                    senderId = uid,
+                    senderName = username,
+                    text = text,
+                    timestamp = System.currentTimeMillis()
+                )
 
-        if(dataId != null){
-            database.child(dataId).setValue(messageData)
-                .addOnSuccessListener{result ->
-                    Log.d("Chat test", "Insert correcto")
-                }
-                .addOnFailureListener { exception ->
-                    Log.d("Chat test", "Error ${exception.message}")
-                }
+                database.push().setValue(message)
+                etMessage.text.clear()
+            }
         }
-        */
 
-        /*
-        //Recibir mensajes
-        val query: Query = database.orderByChild("user").equalTo("Carles")
-
-        query.get()
-            .addOnSuccessListener { snapshot ->
-                if(snapshot.exists()){
-                    for (dataSnapshot in snapshot.children){
-                        val message = dataSnapshot.child("message").getValue(String::class.java)
-                        Log.d("Chat test", "Message: $message")
-                    }
-                }
-                else {
-                    Log.d("Chat test", "No messages found for user Jose")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.d("Chat test", "Error: ${exception.message}")
-            }
-        */
-
-        database.addChildEventListener(createChildListenerEvent())
-
-        return view
-    }
-
-    private fun createChildListenerEvent(): ChildEventListener{
-        return object : ChildEventListener {
+        database.addChildEventListener(object : ChildEventListener{
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                database.ref.get().addOnSuccessListener { fullSnapshot ->
-                    for(child in fullSnapshot.children){
-                        val u = child.child("user").getValue(String::class.java)
-                        val m = child.child("message").getValue(String::class.java)
-                        Log.d("Chat test", "User: $u, Message: $m")
-                    }
+                val message = snapshot.getValue(Message::class.java)
+                if(message != null){
+                    messages.add(message)
+                    adapter.notifyItemInserted(messages.size - 1)
+                    rvMessages.scrollToPosition(messages.size - 1)
+                    Log.d("Chat test",
+                        "User: ${message.senderId}, Message: ${message.text} - From: ${message.senderName}")
                 }
-                    .addOnFailureListener { e ->
-                        Log.d("Chat test", "Error fetching full collection: ${e.message}")
-                    }
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
@@ -124,6 +108,8 @@ class ChatFragment : Fragment() {
             override fun onCancelled(error: DatabaseError) {
                 Log.d("Chat test", "Cancelled - Error: ${error.message}")
             }
-        }
+        })
+
+        return view
     }
 }
