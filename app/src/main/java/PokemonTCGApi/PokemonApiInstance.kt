@@ -12,7 +12,7 @@ interface PokemonApiInstance {
     @GET("cards/{id}")
     fun getCard(
         @Path("id") cardId: String
-    ): Call<PokemonCardResponse>
+    ): Call<SinglePokemonCardResponse>
 
     // Search cards using query parameters (name, supertype, etc.)
     @GET("cards")

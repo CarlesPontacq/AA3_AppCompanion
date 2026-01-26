@@ -1,21 +1,25 @@
 package Models
 
 import PokemonApi.PokemonCard
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.appcompanion.CardInfoFragment
+import com.example.appcompanion.MainActivity
 import com.example.appcompanion.R
 import java.net.URL
 import kotlin.concurrent.thread
 
 // RecyclerView adapter used to display a list of Pokemon cards
 class PokemonCardAdapter(
-    private val cards: List<PokemonCard>
+    private val cards: List<PokemonCard>,
 ) : RecyclerView.Adapter<PokemonCardAdapter.CardViewHolder>() {
 
     // Creates a new ViewHolder when needed
@@ -27,7 +31,26 @@ class PokemonCardAdapter(
 
     // Binds data to the ViewHolder at the given position
     override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
-        holder.bind(cards[position])
+        val card : PokemonCard = cards[position]
+        holder.bind(card)
+
+        holder.itemView.setOnClickListener {
+            onCardClick(holder, card)
+        }
+    }
+
+    private fun onCardClick(holder: CardViewHolder, card: PokemonCard)
+    {
+        // Create fragment with clicked card as an argument
+        val fragment = CardInfoFragment().apply {
+            arguments = Bundle().apply {
+                putString("card_id", card.id)
+            }
+        }
+
+        // Load the fragment
+        val activity : MainActivity? = holder.itemView.context as? MainActivity
+        activity?.loadSubFragment(fragment)
     }
 
     // Returns the total number of items
