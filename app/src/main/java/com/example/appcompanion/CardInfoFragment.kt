@@ -75,6 +75,9 @@ class CardInfoFragment : Fragment() {
                     Log.d("PokemonDetailedCard", "Successful call")
                     response.body()?.data?.let { displayCardInfo(it) }
                 }
+                else {
+                    Log.d("PokemonDetailedCard", "Unsuccessful call")
+                }
             }
 
             override fun onFailure(call: Call<SinglePokemonCardResponse>, t: Throwable) {
