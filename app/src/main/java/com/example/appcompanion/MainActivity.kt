@@ -16,6 +16,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var toolbarView: Toolbar
 
+    private lateinit var currentFragment: Fragment
+
     override fun onCreate(savedInstanceState: Bundle?) {
         //Basic logic to manage the fragments
         super.onCreate(savedInstanceState)
@@ -43,21 +45,18 @@ class MainActivity : AppCompatActivity() {
 
     // Replace current fragment with the specified one
     private fun loadFragment(fragment: Fragment) {
+        currentFragment = fragment
         supportFragmentManager.beginTransaction().replace(R.id.frame, fragment).commit()
-
-        // Change toolbar options based on current fragment
         showToolbarMenuButton()
-        /*
-        when(fragment) {
-            is CardsFragment -> showToolbarMenuButton()
-            else -> showBackArrowButton()
-        }*/
     }
 
     // Replace current fragment with the specified one (specifically subfragments like card info)
     public fun loadSubFragment(fragment: Fragment)
     {
+        val lastFragment : Fragment = currentFragment
+        currentFragment = fragment
         supportFragmentManager.beginTransaction().replace(R.id.frame, fragment).commit()
+        showBackArrowButton(lastFragment)
     }
 
     // Handle navbar item being tapped (change current screen)
@@ -99,11 +98,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Show and manage back arrow from top left of the toolbar
-    private fun showBackArrowButton()
+    private fun showBackArrowButton(previousFragment: Fragment)
     {
-        toolbarView.navigationIcon = ContextCompat.getDrawable(this, R.drawable.nav_chat_white_24dp)
+        toolbarView.navigationIcon = ContextCompat.getDrawable(this, R.drawable.nav_arrow_back_white_48dp)
         toolbarView.setNavigationOnClickListener {
-
+            loadFragment(previousFragment)
         }
     }
 
