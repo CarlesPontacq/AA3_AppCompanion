@@ -3,11 +3,9 @@ package com.example.appcompanion
 import Models.PokemonType
 import PokemonApi.DetailedPokemonCard
 import PokemonApi.PokemonApiCall
-import PokemonApi.PokemonCard
 import PokemonApi.SinglePokemonCardResponse
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.media.Image
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -29,7 +27,7 @@ class CardInfoFragment : Fragment() {
     private var cardId: String? = null
 
     private lateinit var cardImage: ImageView
-    private lateinit var cardSupertypeText: TextView
+    private lateinit var cardSubtypeText: TextView
     private lateinit var cardTypeImage: ImageView
     private lateinit var cardHpText: TextView
     private lateinit var cardRetreatCostLayout: LinearLayout
@@ -46,7 +44,7 @@ class CardInfoFragment : Fragment() {
 
         cardImage = view.findViewById(R.id.detailedCardImage)
         cardTypeImage = view.findViewById(R.id.cardType)
-        cardSupertypeText = view.findViewById(R.id.cardSuptertype)
+        cardSubtypeText = view.findViewById(R.id.cardSubtypes)
         cardHpText = view.findViewById(R.id.cardHp)
         cardRetreatCostLayout = view.findViewById(R.id.cardRetreatCost)
         attackNameText = view.findViewById(R.id.attackName)
@@ -111,7 +109,7 @@ class CardInfoFragment : Fragment() {
             }
         }
 
-        cardSupertypeText.text = card.supertype ?: "-"
+        cardSubtypeText.text = card.subtypes?.joinToString(" ") ?: "-"
 
         val typeString = card.types?.firstOrNull()
         val typeEnum = PokemonType.fromString(typeString)
@@ -126,7 +124,6 @@ class CardInfoFragment : Fragment() {
 
                 imageView.setImageResource(retreatTypeEnum.drawableRes)
                 imageView.visibility = View.VISIBLE
-                Log.d("PokemonDetailedCard", "Draw ${index} cost")
             }
         }
 
@@ -144,6 +141,10 @@ class CardInfoFragment : Fragment() {
           "id": "xy1-1",
           "name": "Venusaur-EX",
           "supertype": "Pokémon",
+          "subtypes": [
+              "Basic",
+              "EX"
+            ],
           "hp": "180",
           "types": ["Grass"],
           "attacks": [

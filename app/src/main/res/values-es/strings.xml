@@ -17,4 +17,7 @@
     <string name="menu_change_theme">Cambiar tema</string>
     <string name="menu_close_app">Cerrar aplicación</string>
     <string name="btn_send">Enviar</string>
+    <string name="card_info_type">Tipo:</string>
+    <string name="card_info_retreat_cost">Coste de Retirada:</string>
+    <string name="card_info_attacks_title">Ataques:</string>
 </resources>

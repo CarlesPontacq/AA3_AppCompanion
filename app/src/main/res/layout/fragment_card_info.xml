@@ -42,12 +42,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.25"
-                    android:text="Pokémon:"
+                    android:text="@string/card_info_supertype"
                     android:textAlignment="textEnd"
                     android:textSize="20sp" />
 
                 <TextView
-                    android:id="@+id/cardSuptertype"
+                    android:id="@+id/cardSubtypes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.25"
@@ -60,7 +60,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.25"
-                    android:text="Type:"
+                    android:text="@string/card_info_type"
                     android:textAlignment="textEnd"
                     android:textSize="20sp" />
 
@@ -86,7 +86,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="HP: "
+                    android:text="@string/card_info_hp"
                     android:textAlignment="textEnd"
                     android:textSize="20sp" />
 
@@ -104,7 +104,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Retreat Cost:"
+                    android:text="@string/card_info_retreat_cost"
                     android:textAlignment="textEnd"
                     android:textSize="20sp" />
 
@@ -189,7 +189,7 @@
                     android:layout_height="wrap_content"
                     android:background="@color/reddishBackground"
                     android:padding="5dp"
-                    android:text="Ataques"
+                    android:text="@string/card_info_attacks_title"
                     android:textAlignment="center"
                     android:textColor="@color/lightGray"
                     android:textSize="24sp" />

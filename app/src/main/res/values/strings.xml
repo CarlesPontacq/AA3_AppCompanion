@@ -17,4 +17,9 @@
     <string name="menu_change_theme">Change theme</string>
     <string name="menu_close_app">Close app</string>
     <string name="btn_send">Send</string>
+    <string name="card_info_supertype" translatable="false">Pokémon:</string>
+    <string name="card_info_type">Type:</string>
+    <string name="card_info_hp" translatable="false">HP:</string>
+    <string name="card_info_retreat_cost">Retreat Cost:</string>
+    <string name="card_info_attacks_title">Attacks</string>
 </resources>
