@@ -53,8 +53,12 @@ class ChatFragment : Fragment() {
             val text = etMessage.text.toString().trim()
             if(text.isNotEmpty()){
                 val uid = FirebaseAuth.getInstance().currentUser?.uid ?: "anon"
-                val username = FirebaseAuth.getInstance().currentUser?.displayName ?: "Anon"
-                username?.isNullOrBlank() ?: "Anon"
+                var username = FirebaseAuth.getInstance().currentUser?.displayName ?: "Anon"
+                if(username.isNullOrBlank()){
+                    username = "Anon"
+                }
+
+                Log.d("Chat test", "username")
 
                 val message = Message(
                     senderId = uid,
