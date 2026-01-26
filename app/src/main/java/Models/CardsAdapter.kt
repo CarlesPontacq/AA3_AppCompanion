@@ -44,7 +44,7 @@ class PokemonCardAdapter(
         // Create fragment with clicked card as an argument
         val fragment = CardInfoFragment().apply {
             arguments = Bundle().apply {
-                putParcelable("card", card)
+                putString("card_id", card.id)
             }
         }
 
