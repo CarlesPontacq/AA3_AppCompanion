@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
 object PokemonApiCall {
 
     // Pokemon TCG API key and Base URL for the Pokemon TCG API
-    private const val API_KEY = "68b5881e-be78-4765-8037-c4ca1e74af1f" //<- Key de Pokemon TCG API
+    private const val API_KEY = "72065f7f-ff02-4028-ba19-8559ee05e588" //<- Key de Pokemon TCG API
     private const val BASE_URL =  "https://api.pokemontcg.io/v2/"
 
     // Interceptor to add the API key to every request

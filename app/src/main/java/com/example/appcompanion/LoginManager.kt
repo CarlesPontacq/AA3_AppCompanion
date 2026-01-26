@@ -1,5 +1,6 @@
 package com.example.appcompanion
 
+import Models.LoginType
 import android.app.Activity
 import android.content.Intent
 import android.util.Log
@@ -14,7 +15,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 object LoginManager {
     private const val requestCodeGoogle = 9001
 
-    var loginType: Int? = null
+    var loginType: LoginType? = null
 
     private lateinit var googleClient: GoogleSignInClient
     private val auth = FirebaseAuth.getInstance()
@@ -33,9 +34,9 @@ object LoginManager {
     // (login/register with google, login with firebase or register with firebase)
     fun startSession(activity: Activity){
         when(loginType){
-            0 -> loginGoogle(activity)
-            1 -> Log.d("LoginManager", "Intentando hacer Login de Firebase")
-            2 -> Log.d("LoginManager", "Intentando hacer Register de Firebase")
+            LoginType.GOOGLE_LOGIN -> loginGoogle(activity)
+            LoginType.FIREBASE_LOGIN -> Log.d("LoginManager", "Intentando hacer Login de Firebase")
+            LoginType.FIREBASE_REGISTER -> Log.d("LoginManager", "Intentando hacer Register de Firebase")
             else -> Log.e("LoginManager", "Tipo de login inválido")
         }
     }
