@@ -21,218 +21,241 @@
             android:visibility="visible"
             tools:src="@tools:sample/backgrounds/scenic" />
 
-        <LinearLayout
-            android:id="@+id/infoSection"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:background="@color/lightGray"
-            android:orientation="vertical">
+            android:layout_weight="0.5">
 
             <LinearLayout
-                android:id="@+id/infoRow1"
+                android:id="@+id/infoSection"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="40dp"
-                android:paddingBottom="15dp">
-
-                <TextView
-                    android:id="@+id/cardSupertypeTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:text="@string/card_info_supertype"
-                    android:textAlignment="textEnd"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/cardSubtypes"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:paddingLeft="10dp"
-                    android:text="Basic EX"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/cardTypeTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:text="@string/card_info_type"
-                    android:textAlignment="textEnd"
-                    android:textSize="20sp" />
-
-                <ImageView
-                    android:id="@+id/cardType"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.25"
-                    android:paddingLeft="10dp"
-                    android:scaleType="fitStart"
-                    android:src="@drawable/ic_pokesync" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/infoRow2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/cardHpTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/card_info_hp"
-                    android:textAlignment="textEnd"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/cardHp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingLeft="10dp"
-                    android:text="100"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/cardRetreatCostTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/card_info_retreat_cost"
-                    android:textAlignment="textEnd"
-                    android:textSize="20sp" />
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:background="@color/lightGray"
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/cardRetreatCost"
+                    android:id="@+id/infoRow1"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="50dp">
+                    android:paddingTop="40dp"
+                    android:paddingBottom="15dp">
+
+                    <TextView
+                        android:id="@+id/cardSupertypeTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25"
+                        android:text="@string/card_info_supertype"
+                        android:textAlignment="textEnd"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/cardSubtypes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25"
+                        android:paddingLeft="10dp"
+                        android:text="Basic EX"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/cardTypeTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25"
+                        android:text="@string/card_info_type"
+                        android:textAlignment="textEnd"
+                        android:textSize="20sp" />
 
                     <ImageView
-                        android:id="@+id/retreatCost1"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/cardType"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:scaleType="fitEnd"
-                        android:src="@drawable/ic_lightning"
-                        android:visibility="invisible" />
+                        android:layout_weight="0.25"
+                        android:paddingLeft="10dp"
+                        android:scaleType="fitStart"
+                        android:src="@drawable/ic_pokesync" />
 
-                    <ImageView
-                        android:id="@+id/retreatCost2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:scaleType="fitEnd"
-                        android:src="@drawable/ic_lightning"
-                        android:visibility="invisible" />
-
-                    <ImageView
-                        android:id="@+id/retreatCost3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:scaleType="fitEnd"
-                        android:src="@drawable/ic_lightning"
-                        android:visibility="invisible" />
-
-                    <ImageView
-                        android:id="@+id/retreatCost4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:scaleType="fitEnd"
-                        android:src="@drawable/ic_lightning"
-                        android:visibility="invisible" />
-
-                    <ImageView
-                        android:id="@+id/retreatCost5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:scaleType="fitEnd"
-                        android:src="@drawable/ic_lightning"
-                        android:visibility="invisible" />
-
-                    <ImageView
-                        android:id="@+id/retreatCost6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:scaleType="fitEnd"
-                        android:src="@drawable/ic_lightning"
-                        android:visibility="invisible" />
                 </LinearLayout>
 
-            </LinearLayout>
-
-            <FrameLayout
-                android:id="@+id/attacksSeparator"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="50dp"
-                android:paddingTop="40dp"
-                android:paddingRight="50dp"
-                android:paddingBottom="20dp">
-
-                <TextView
-                    android:id="@+id/attacksTitle"
+                <LinearLayout
+                    android:id="@+id/infoRow2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/reddishBackground"
-                    android:padding="5dp"
-                    android:text="@string/card_info_attacks_title"
-                    android:textAlignment="center"
-                    android:textColor="@color/lightGray"
-                    android:textSize="24sp" />
-            </FrameLayout>
+                    android:orientation="horizontal">
 
-            <LinearLayout
-                android:id="@+id/attackNameRow"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingLeft="80dp"
-                android:paddingRight="80dp">
+                    <TextView
+                        android:id="@+id/cardHpTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/card_info_hp"
+                        android:textAlignment="textEnd"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/cardHp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingLeft="10dp"
+                        android:text="100"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/cardRetreatCostTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/card_info_retreat_cost"
+                        android:textAlignment="textEnd"
+                        android:textSize="20sp" />
+
+                    <LinearLayout
+                        android:id="@+id/cardRetreatCost"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="50dp">
+
+                        <ImageView
+                            android:id="@+id/retreatCost1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:scaleType="fitEnd"
+                            android:src="@drawable/ic_lightning"
+                            android:visibility="invisible" />
+
+                        <ImageView
+                            android:id="@+id/retreatCost2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:scaleType="fitEnd"
+                            android:src="@drawable/ic_lightning"
+                            android:visibility="invisible" />
+
+                        <ImageView
+                            android:id="@+id/retreatCost3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:scaleType="fitEnd"
+                            android:src="@drawable/ic_lightning"
+                            android:visibility="invisible" />
+
+                        <ImageView
+                            android:id="@+id/retreatCost4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:scaleType="fitEnd"
+                            android:src="@drawable/ic_lightning"
+                            android:visibility="invisible" />
+
+                        <ImageView
+                            android:id="@+id/retreatCost5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:scaleType="fitEnd"
+                            android:src="@drawable/ic_lightning"
+                            android:visibility="invisible" />
+
+                        <ImageView
+                            android:id="@+id/retreatCost6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:scaleType="fitEnd"
+                            android:src="@drawable/ic_lightning"
+                            android:visibility="invisible" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <FrameLayout
+                    android:id="@+id/attacksSeparator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="50dp"
+                    android:paddingTop="40dp"
+                    android:paddingRight="50dp"
+                    android:paddingBottom="20dp">
+
+                    <TextView
+                        android:id="@+id/attacksTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/reddishBackground"
+                        android:padding="5dp"
+                        android:text="@string/card_info_attacks_title"
+                        android:textAlignment="center"
+                        android:textColor="@color/lightGray"
+                        android:textSize="24sp" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:id="@+id/attackNameRow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="80dp"
+                    android:paddingRight="80dp">
+
+                    <TextView
+                        android:id="@+id/attackName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Wild Charge"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/attackDamage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="90"
+                        android:textAlignment="textEnd"
+                        android:textSize="20sp" />
+
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/attackName"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/attackText"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Wild Charge"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/attackDamage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="90"
-                    android:textAlignment="textEnd"
-                    android:textSize="20sp" />
+                    android:paddingLeft="80dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="80dp"
+                    android:text="Put 3 damage counters on each of your opponent's Pokémon that has any Energy attached to it."
+                    android:textSize="16sp" />
 
             </LinearLayout>
+        </FrameLayout>
 
-            <TextView
-                android:id="@+id/attackText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingLeft="80dp"
-                android:paddingTop="10dp"
-                android:paddingRight="80dp"
-                android:text="Put 3 damage counters on each of your opponent's Pokémon that has any Energy attached to it."
-                android:textSize="16sp" />
-
-        </LinearLayout>
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/loadingOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/darkerGray">
+
+    </FrameLayout>
+
+    <ProgressBar
+        android:id="@+id/cardInfoProgressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
 </FrameLayout>
