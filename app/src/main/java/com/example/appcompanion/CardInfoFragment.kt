@@ -12,8 +12,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
@@ -25,6 +27,9 @@ import kotlin.concurrent.thread
 
 class CardInfoFragment : Fragment() {
     private var cardId: String? = null
+
+    private lateinit var loadingBar: ProgressBar
+    private lateinit var loadingOverlay: FrameLayout
 
     private lateinit var cardImage: ImageView
     private lateinit var cardSubtypeText: TextView
@@ -41,6 +46,9 @@ class CardInfoFragment : Fragment() {
         cardId = arguments?.getString("card_id")
 
         val view = inflater.inflate(R.layout.fragment_card_info, container, false)
+
+        loadingBar = view.findViewById(R.id.cardInfoProgressBar)
+        loadingOverlay = view.findViewById(R.id.loadingOverlay)
 
         cardImage = view.findViewById(R.id.detailedCardImage)
         cardTypeImage = view.findViewById(R.id.cardType)
@@ -62,7 +70,19 @@ class CardInfoFragment : Fragment() {
         (activity as? AppCompatActivity)?.supportActionBar?.title = "Loading..."
     }
 
+    private fun showLoading() {
+        loadingBar.visibility = View.VISIBLE
+        loadingOverlay.visibility = View.VISIBLE
+    }
+
+    private fun showContent() {
+        loadingBar.visibility = View.GONE
+        loadingOverlay.visibility = View.GONE
+    }
+
     private fun loadCard(id: String) {
+        showLoading()
+
         val call = PokemonApiCall.apiService.getCard(id)
 
         call.enqueue(object : Callback<SinglePokemonCardResponse> {
@@ -74,6 +94,7 @@ class CardInfoFragment : Fragment() {
                 if (response.isSuccessful) {
                     Log.d("PokemonDetailedCard", "Successful call")
                     response.body()?.data?.let { displayCardInfo(it) }
+                    showContent()
                 }
                 else {
                     Log.d("PokemonDetailedCard", "Unsuccessful call")
