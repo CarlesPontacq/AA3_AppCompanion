@@ -18,6 +18,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
@@ -97,12 +98,19 @@ class CardInfoFragment : Fragment() {
                     showContent()
                 }
                 else {
+                    FirebaseCrashlytics.getInstance().recordException(
+                        Exception("API error ${response.code()}")
+                    )
                     Log.d("PokemonDetailedCard", "Unsuccessful call")
+                    goBackToCards()
                 }
             }
 
             override fun onFailure(call: Call<SinglePokemonCardResponse>, t: Throwable) {
-                // FALTA POR PONER
+                Log.e("PokemonDetailedCard", "Error: ${t.message}")
+
+                FirebaseCrashlytics.getInstance().recordException(t)
+                goBackToCards()
             }
         })
     }
@@ -145,5 +153,15 @@ class CardInfoFragment : Fragment() {
         attackDamageText.text = firstAttack?.damage?.toString() ?: "-"
 
         (activity as? AppCompatActivity)?.supportActionBar?.title = card.name
+    }
+
+    // Go back to the previous fragment (cards)
+    private fun goBackToCards() {
+        if (!isAdded) return
+
+        parentFragmentManager
+            .beginTransaction()
+            .replace(R.id.frame, CardsFragment())
+            .commit()
     }
 }
