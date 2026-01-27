@@ -4,6 +4,8 @@ import Models.PokemonCardAdapter
 import PokemonApi.PokemonApiCall
 import PokemonApi.PokemonCard
 import PokemonApi.PokemonCardResponse
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -20,10 +22,15 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import androidx.appcompat.app.AppCompatActivity
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.appcompanion.AnalyticsManager.getSharedPreferences
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class CardsFragment : Fragment() {
 
     //Card list
+    private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var recyclerView: RecyclerView
     private val cardsList = mutableListOf<PokemonCard>()
     private lateinit var adapter: PokemonCardAdapter
@@ -46,6 +53,8 @@ class CardsFragment : Fragment() {
     private var trainerQuery: String = "Trainer"
     private var energyQuery: String = "Energy"
 
+    private lateinit var prefs : SharedPreferences
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -66,6 +75,9 @@ class CardsFragment : Fragment() {
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
         adapter = PokemonCardAdapter(cardsList)
         recyclerView.adapter = adapter
+
+        swipeRefresh = view.findViewById(R.id.swipeRefresh)
+        swipeRefresh.setProgressViewOffset(false, 275, 375)
 
         errorLayout = view.findViewById(R.id.errorLayout)
         retryButton = view.findViewById(R.id.retryButton)
@@ -95,6 +107,14 @@ class CardsFragment : Fragment() {
             loadCardsByCategory()
         }
 
+        prefs = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+
+        swipeRefresh.setOnRefreshListener {
+            resetLocalCards()
+            loadCards(null)
+            swipeRefresh.isRefreshing = false
+        }
+
         //Default load cards
         loadCards(null)
 
@@ -119,11 +139,27 @@ class CardsFragment : Fragment() {
         return view
     }
 
+    private fun loadCardsFromCache(): List<PokemonCard>? {
+        val jsonOfCards = prefs.getString("cached_cards", null) ?: return null
+        val type = object : TypeToken<List<PokemonCard>>() {}.type
+        return Gson().fromJson(jsonOfCards, type)
+    }
+
     //function to load cards by search or by default
     private fun loadCards(query: String? = null) {
         //First we show the loading progressBar and update the lastQuery
         showLoading()
         lastQuery = query
+
+        // Check if default cards result is already stored, and if so load that instead of calling the API
+        val cached = loadCardsFromCache()
+        if (cached != null && query.isNullOrBlank()) {
+            cardsList.clear()
+            cardsList.addAll(cached)
+            adapter.notifyDataSetChanged()
+            showContent()
+            return
+        }
 
         Log.d("PokemonCard", "Loading: ${queryCategory} ${query}")
 
@@ -160,6 +196,8 @@ class CardsFragment : Fragment() {
                     cardsList.clear()
                     cardsList.addAll(cards)
                     adapter.notifyDataSetChanged()
+
+                    saveCardsLocally(cards)
 
                     showContent()
                 } else {
@@ -260,5 +298,16 @@ class CardsFragment : Fragment() {
         pokemonButton.isSelected = queryCategory == pokemonQuery
         trainerButton.isSelected = queryCategory == trainerQuery
         energyButton.isSelected = queryCategory == energyQuery
+    }
+
+    // Save current cards to avoid having to call the API again once it already has loaded
+    private fun saveCardsLocally(cards: List<PokemonCard>) {
+        val jsonOfCards = Gson().toJson(cards)
+        prefs.edit().putString("cached_cards", jsonOfCards).apply()
+    }
+
+    // Reset cards stored locally so that the API knows to call for new ones
+    private fun resetLocalCards() {
+        prefs.edit().putString("cached_cards", null).apply()
     }
 }

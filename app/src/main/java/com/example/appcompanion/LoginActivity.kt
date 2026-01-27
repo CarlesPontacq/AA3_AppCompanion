@@ -1,5 +1,6 @@
 package com.example.appcompanion
 
+import Models.LoginType
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -26,12 +27,16 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var prefs : SharedPreferences
 
+    private val userPrefs : String = "user_prefs"
+    private val isLoggedInPrefs : String = "is_logged_in"
+    private val usernamePrefs : String = "username"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // Check if user is already logged in, and if they are skip this activity
-        prefs = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-        val isLoggedIn : Boolean = prefs.getBoolean("is_logged_in", false)
+        prefs = getSharedPreferences(userPrefs, Context.MODE_PRIVATE)
+        val isLoggedIn : Boolean = prefs.getBoolean(isLoggedInPrefs, false)
 
         if (isLoggedIn) {
             goToNextActivity()
@@ -44,7 +49,7 @@ class LoginActivity : AppCompatActivity() {
         LoginManager.configure(this)
 
         findViewById<SignInButton>(R.id.btn_login_google).setOnClickListener {
-            LoginManager.loginType = 0
+            LoginManager.loginType = LoginType.GOOGLE_LOGIN
             LoginManager.startSession(this)
         }
 
@@ -57,7 +62,7 @@ class LoginActivity : AppCompatActivity() {
             val email = emailField.text.toString()
             val password = passwordField.text.toString()
 
-            LoginManager.loginType = 1
+            LoginManager.loginType = LoginType.FIREBASE_LOGIN
 
             LoginManager.loginFirebaseEmail(email, password, {
                 Toast.makeText(this, "Login correcto", Toast.LENGTH_SHORT).show()
@@ -75,7 +80,7 @@ class LoginActivity : AppCompatActivity() {
             val email = emailField.text.toString()
             val password = passwordField.text.toString()
 
-            LoginManager.loginType = 2
+            LoginManager.loginType = LoginType.FIREBASE_REGISTER
 
             LoginManager.registerFirebaseEmail(
                 email,
@@ -101,6 +106,13 @@ class LoginActivity : AppCompatActivity() {
             requestCode,
             data,
             onSuccess = {
+                val user = FirebaseAuth.getInstance().currentUser
+
+                if(user != null){
+                    val displayName = user.displayName ?: ""
+                    saveLoginLocally(displayName)
+                }
+
                 Toast.makeText(this, "Login Google exitoso", Toast.LENGTH_SHORT).show()
                 goToNextActivity()
             },
@@ -116,11 +128,15 @@ class LoginActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun saveLoginLocally(email: String) {
-        val username = email.substringBefore("@")
+    private fun saveLoginLocally(user: String) {
+        var username = ""
+        if (user.contains("@"))
+            username = user.substringBefore("@")
+        else
+            username = user
         prefs.edit()
-            .putString("username", username)
-            .putBoolean("is_logged_in", true)
+            .putString(usernamePrefs, username)
+            .putBoolean(isLoggedInPrefs, true)
             .apply()
     }
 }

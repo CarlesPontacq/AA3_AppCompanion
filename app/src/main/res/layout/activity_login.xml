@@ -80,7 +80,8 @@
         android:layout_height="wrap_content"
         android:text="@string/btn_login"
         android:layout_margin="10dp"
-        android:backgroundTint="@color/black"/>
+        android:backgroundTint="@color/black"
+        android:textColor="@color/white"/>
 
     <Button
         android:id="@+id/btn_register"
@@ -88,7 +89,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:text="@string/btn_register"
-        android:backgroundTint="@color/gray"/>
+        android:backgroundTint="@color/gray"
+        android:textColor="@color/white"/>
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/btn_login_google"
